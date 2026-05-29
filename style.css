@@ -1,4 +1,4 @@
-/* ===== style.css ===== */
+/* ===== style.css (نسخه کامل و اصلاح‌شده) ===== */
 :root {
     --bg: #fdf6ee;
     --card-bg: #fffaf4;
@@ -33,7 +33,11 @@ body.dark {
     --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.3);
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
 body {
     font-family: var(--font);
@@ -48,19 +52,22 @@ body {
     transition: background 0.3s, color 0.3s;
 }
 
-/* مودال */
+/* ==================== مودال ==================== */
 .modal-overlay {
     position: fixed;
     inset: 0;
     background: rgba(40, 20, 10, 0.7);
     backdrop-filter: blur(6px);
-    display: flex;
+    display: flex;          /* پیش‌فرض نمایش */
     align-items: center;
     justify-content: center;
     z-index: 1000;
     padding: 20px;
     animation: fadeIn 0.4s ease;
 }
+
+/* کلاس hidden اصلاً وجود ندارد – مودال فقط با style.display کنترل می‌شود */
+
 .modal-card {
     background: var(--card-bg);
     border-radius: var(--radius);
@@ -71,9 +78,26 @@ body {
     box-shadow: var(--shadow-lg);
     animation: slideUp 0.5s ease;
 }
-.modal-icon { font-size: 56px; margin-bottom: 12px; animation: bounce 1.5s infinite; }
-.modal-card h2 { font-size: 1.4em; color: var(--accent-dark); margin-bottom: 10px; font-weight: 600; }
-.modal-card p { color: var(--text-light); font-size: 0.95em; margin-bottom: 16px; }
+
+.modal-icon {
+    font-size: 56px;
+    margin-bottom: 12px;
+    animation: bounce 1.5s infinite;
+}
+
+.modal-card h2 {
+    font-size: 1.4em;
+    color: var(--accent-dark);
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.modal-card p {
+    color: var(--text-light);
+    font-size: 0.95em;
+    margin-bottom: 16px;
+}
+
 .modal-error {
     color: var(--danger);
     font-size: 0.85em;
@@ -81,6 +105,7 @@ body {
     margin-top: -8px;
     margin-bottom: 8px;
 }
+
 .name-input {
     width: 100%;
     padding: 14px 18px;
@@ -95,7 +120,12 @@ body {
     outline: none;
     margin-bottom: 14px;
 }
-.name-input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(192, 133, 82, 0.1); }
+
+.name-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(192, 133, 82, 0.1);
+}
+
 .btn-primary {
     background: var(--accent);
     color: #fff;
@@ -108,10 +138,21 @@ body {
     transition: var(--transition);
     font-weight: 500;
 }
-.btn-primary:hover { background: var(--accent-dark); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(139, 90, 60, 0.3); }
-.modal-hint { font-size: 0.8em; color: var(--text-light); margin-top: 12px; opacity: 0.8; }
 
-/* هدر */
+.btn-primary:hover {
+    background: var(--accent-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(139, 90, 60, 0.3);
+}
+
+.modal-hint {
+    font-size: 0.8em;
+    color: var(--text-light);
+    margin-top: 12px;
+    opacity: 0.8;
+}
+
+/* ==================== هدر ==================== */
 .app-container {
     max-width: 680px;
     margin: 0 auto;
@@ -120,12 +161,13 @@ body {
     opacity: 1;
     transition: opacity 0.5s ease;
 }
-.app-container.hidden { opacity: 0; pointer-events: none; }
+
 .header-top-row {
     display: flex;
     justify-content: flex-end;
     margin-bottom: 8px;
 }
+
 .dark-mode-btn {
     background: none;
     border: none;
@@ -136,11 +178,15 @@ body {
     transition: var(--transition);
     color: var(--text);
 }
+
 .dark-mode-btn:hover {
     background: var(--accent-light);
 }
 
-.app-header { margin-bottom: 16px; }
+.app-header {
+    margin-bottom: 16px;
+}
+
 .calendar-card {
     background: var(--card-bg);
     border-radius: var(--radius);
@@ -150,16 +196,64 @@ body {
     border: 1px solid var(--border);
     margin-bottom: 12px;
 }
-.calendar-day-name { font-size: 0.9em; color: var(--accent); font-weight: 500; margin-bottom: 4px; }
-.calendar-main { display: flex; align-items: baseline; justify-content: center; gap: 8px; flex-wrap: wrap; }
-.calendar-day { font-size: 2.6em; font-weight: 700; color: var(--accent-dark); line-height: 1; }
-.calendar-month { font-size: 1.3em; color: var(--text); font-weight: 500; }
-.calendar-year { font-size: 1em; color: var(--text-light); font-weight: 400; }
-.calendar-date-detail { font-size: 0.8em; color: var(--text-light); margin-top: 4px; opacity: 0.8; }
 
-.greeting-section { text-align: center; margin-bottom: 4px; }
-.greeting-text { font-size: 1.2em; font-weight: 500; color: var(--text); margin-bottom: 8px; }
-.greeting-text span { color: var(--accent-dark); font-weight: 700; }
+.calendar-day-name {
+    font-size: 0.9em;
+    color: var(--accent);
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.calendar-main {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.calendar-day {
+    font-size: 2.6em;
+    font-weight: 700;
+    color: var(--accent-dark);
+    line-height: 1;
+}
+
+.calendar-month {
+    font-size: 1.3em;
+    color: var(--text);
+    font-weight: 500;
+}
+
+.calendar-year {
+    font-size: 1em;
+    color: var(--text-light);
+    font-weight: 400;
+}
+
+.calendar-date-detail {
+    font-size: 0.8em;
+    color: var(--text-light);
+    margin-top: 4px;
+    opacity: 0.8;
+}
+
+.greeting-section {
+    text-align: center;
+    margin-bottom: 4px;
+}
+
+.greeting-text {
+    font-size: 1.2em;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 8px;
+}
+
+.greeting-text span {
+    color: var(--accent-dark);
+    font-weight: 700;
+}
 
 .poem-card {
     background: linear-gradient(135deg, var(--card-bg), #fef3e0);
@@ -171,18 +265,39 @@ body {
     gap: 8px;
     box-shadow: var(--shadow);
 }
+
 body.dark .poem-card {
     background: linear-gradient(135deg, #4a3f36, #3e352e);
 }
-.poem-icon { font-size: 1.3em; flex-shrink: 0; margin-top: 2px; }
-.poem-text { font-size: 0.9em; color: var(--text-light); font-style: italic; line-height: 1.8; text-align: right; }
 
-/* صفحات */
-.pages-container { position: relative; }
-.page { display: none; }
-.page.active { display: block; }
+.poem-icon {
+    font-size: 1.3em;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
 
-/* لیست‌ها */
+.poem-text {
+    font-size: 0.9em;
+    color: var(--text-light);
+    font-style: italic;
+    line-height: 1.8;
+    text-align: right;
+}
+
+/* ==================== صفحات ==================== */
+.pages-container {
+    position: relative;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+/* ==================== لیست کارها و زمان‌بندی ==================== */
 .list-section {
     background: var(--card-bg);
     border-radius: var(--radius);
@@ -191,15 +306,66 @@ body.dark .poem-card {
     border: 1px solid var(--border);
     margin-bottom: 16px;
 }
-.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-.section-header h2 { font-size: 1.1em; font-weight: 600; color: var(--text); }
-.item-count { font-size: 0.8em; background: var(--accent-light); color: var(--accent-dark); padding: 4px 12px; border-radius: 50px; font-weight: 500; }
-.add-item-row { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; }
-.item-input { flex: 1; padding: 11px 14px; border: 2px solid var(--border); border-radius: var(--radius-sm); font-family: var(--font); font-size: 0.9em; background: var(--card-bg); color: var(--text); transition: var(--transition); outline: none; }
-.item-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(192, 133, 82, 0.08); }
 
-.time-range-selects { display: flex; align-items: center; gap: 4px; }
-.range-separator { font-size: 0.85em; color: var(--text-light); margin: 0 2px; }
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.section-header h2 {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.item-count {
+    font-size: 0.8em;
+    background: var(--accent-light);
+    color: var(--accent-dark);
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-weight: 500;
+}
+
+.add-item-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    align-items: center;
+}
+
+.item-input {
+    flex: 1;
+    padding: 11px 14px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: var(--font);
+    font-size: 0.9em;
+    background: var(--card-bg);
+    color: var(--text);
+    transition: var(--transition);
+    outline: none;
+}
+
+.item-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(192, 133, 82, 0.08);
+}
+
+.time-range-selects {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.range-separator {
+    font-size: 0.85em;
+    color: var(--text-light);
+    margin: 0 2px;
+}
+
 .time-input {
     padding: 8px 6px;
     border: 2px solid var(--border);
@@ -213,7 +379,10 @@ body.dark .poem-card {
     min-width: 95px;
     transition: var(--transition);
 }
-.time-input:focus { border-color: var(--accent); }
+
+.time-input:focus {
+    border-color: var(--accent);
+}
 
 .btn-add {
     background: var(--success);
@@ -228,9 +397,19 @@ body.dark .poem-card {
     font-weight: 500;
     white-space: nowrap;
 }
-.btn-add:hover { filter: brightness(1.1); transform: translateY(-1px); }
 
-.item-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.btn-add:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+}
+
+.item-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
 .item-list li {
     display: flex;
     align-items: center;
@@ -242,14 +421,45 @@ body.dark .poem-card {
     transition: var(--transition);
     gap: 10px;
 }
-.item-list li:hover { box-shadow: 0 2px 8px rgba(140, 100, 60, 0.08); }
-.item-list li.done { opacity: 0.6; }
-.item-list li.done .item-text { text-decoration: line-through; color: var(--text-light); }
 
-.item-text { flex: 1; font-size: 0.9em; cursor: pointer; user-select: none; }
-.item-time-badge { font-size: 0.75em; background: var(--accent-light); color: var(--accent-dark); padding: 2px 10px; border-radius: 50px; font-weight: 500; white-space: nowrap; margin: 0 4px; }
-.item-actions { display: flex; gap: 4px; }
-.item-check, .item-delete {
+.item-list li:hover {
+    box-shadow: 0 2px 8px rgba(140, 100, 60, 0.08);
+}
+
+.item-list li.done {
+    opacity: 0.6;
+}
+
+.item-list li.done .item-text {
+    text-decoration: line-through;
+    color: var(--text-light);
+}
+
+.item-text {
+    flex: 1;
+    font-size: 0.9em;
+    cursor: pointer;
+    user-select: none;
+}
+
+.item-time-badge {
+    font-size: 0.75em;
+    background: var(--accent-light);
+    color: var(--accent-dark);
+    padding: 2px 10px;
+    border-radius: 50px;
+    font-weight: 500;
+    white-space: nowrap;
+    margin: 0 4px;
+}
+
+.item-actions {
+    display: flex;
+    gap: 4px;
+}
+
+.item-check,
+.item-delete {
     background: none;
     border: none;
     cursor: pointer;
@@ -258,17 +468,47 @@ body.dark .poem-card {
     border-radius: 6px;
     transition: var(--transition);
 }
-.item-check { color: var(--success); }
-.item-delete { color: var(--text-light); opacity: 0.7; }
-.item-check:hover { background: rgba(122, 158, 126, 0.15); }
-.item-delete:hover { color: var(--danger); background: rgba(212, 117, 107, 0.1); opacity: 1; }
 
-.empty-msg { text-align: center; color: var(--text-light); font-size: 0.9em; padding: 16px; opacity: 0.7; }
-.empty-msg.hidden { display: none; }
+.item-check {
+    color: var(--success);
+}
 
-.section-divider { text-align: center; font-size: 1.5em; color: var(--accent-light); padding: 4px 0; user-select: none; }
+.item-delete {
+    color: var(--text-light);
+    opacity: 0.7;
+}
 
-/* ساعت‌ها */
+.item-check:hover {
+    background: rgba(122, 158, 126, 0.15);
+}
+
+.item-delete:hover {
+    color: var(--danger);
+    background: rgba(212, 117, 107, 0.1);
+    opacity: 1;
+}
+
+.empty-msg {
+    text-align: center;
+    color: var(--text-light);
+    font-size: 0.9em;
+    padding: 16px;
+    opacity: 0.7;
+}
+
+.empty-msg.hidden {
+    display: none;
+}
+
+.section-divider {
+    text-align: center;
+    font-size: 1.5em;
+    color: var(--accent-light);
+    padding: 4px 0;
+    user-select: none;
+}
+
+/* ==================== ساعت‌های نموداری ==================== */
 .clocks-section {
     background: var(--card-bg);
     border-radius: var(--radius);
@@ -277,10 +517,33 @@ body.dark .poem-card {
     border: 1px solid var(--border);
     margin-bottom: 16px;
 }
-.clocks-title { text-align: center; font-size: 1.1em; font-weight: 600; color: var(--text); margin-bottom: 16px; }
-.clocks-container { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
-.clock-wrapper { text-align: center; }
-.clock-label { font-size: 0.9em; font-weight: 500; color: var(--accent-dark); margin-bottom: 10px; }
+
+.clocks-title {
+    text-align: center;
+    font-size: 1.1em;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 16px;
+}
+
+.clocks-container {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.clock-wrapper {
+    text-align: center;
+}
+
+.clock-label {
+    font-size: 0.9em;
+    font-weight: 500;
+    color: var(--accent-dark);
+    margin-bottom: 10px;
+}
+
 .clock-face {
     width: 170px;
     height: 170px;
@@ -291,6 +554,7 @@ body.dark .poem-card {
     margin: 0 auto;
     box-shadow: inset 0 0 20px rgba(180, 140, 100, 0.12), 0 4px 16px rgba(140, 100, 60, 0.12);
 }
+
 .clock-face canvas {
     position: absolute;
     top: 0;
@@ -299,6 +563,7 @@ body.dark .poem-card {
     height: 100%;
     border-radius: 50%;
 }
+
 .clock-center {
     position: absolute;
     top: 50%;
@@ -312,8 +577,9 @@ body.dark .poem-card {
     box-shadow: 0 0 8px rgba(139, 90, 60, 0.4);
 }
 
-/* کرونومتر و پومودورو */
-.stopwatch-card, .pomodoro-card {
+/* ==================== کرونومتر و پومودورو ==================== */
+.stopwatch-card,
+.pomodoro-card {
     background: var(--card-bg);
     border-radius: var(--radius);
     padding: 28px 24px;
@@ -322,6 +588,7 @@ body.dark .poem-card {
     text-align: center;
     margin-bottom: 16px;
 }
+
 .timer-display {
     font-size: 2.8em;
     font-weight: 700;
@@ -330,13 +597,16 @@ body.dark .poem-card {
     letter-spacing: 2px;
     font-variant-numeric: tabular-nums;
 }
-.timer-controls, .pomodoro-controls {
+
+.timer-controls,
+.pomodoro-controls {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
     justify-content: center;
     margin-bottom: 16px;
 }
+
 .btn-secondary {
     background: var(--accent-light);
     color: var(--text);
@@ -348,8 +618,19 @@ body.dark .poem-card {
     cursor: pointer;
     transition: var(--transition);
 }
-.btn-secondary:hover { background: var(--accent); color: #fff; transform: translateY(-1px); }
-.btn-secondary:disabled { opacity: 0.5; cursor: default; transform: none; }
+
+.btn-secondary:hover {
+    background: var(--accent);
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.btn-secondary:disabled {
+    opacity: 0.5;
+    cursor: default;
+    transform: none;
+}
+
 .lap-list {
     list-style: none;
     max-height: 200px;
@@ -357,6 +638,7 @@ body.dark .poem-card {
     margin-top: 12px;
     text-align: right;
 }
+
 .lap-list li {
     padding: 6px 12px;
     border-bottom: 1px solid var(--border);
@@ -364,7 +646,7 @@ body.dark .poem-card {
     color: var(--text-light);
 }
 
-/* پومودورو */
+/* ==================== پومودورو ==================== */
 .pomodoro-settings {
     display: flex;
     flex-wrap: wrap;
@@ -372,6 +654,7 @@ body.dark .poem-card {
     justify-content: center;
     margin-bottom: 20px;
 }
+
 .setting-row {
     display: flex;
     align-items: center;
@@ -381,7 +664,12 @@ body.dark .poem-card {
     border-radius: var(--radius-sm);
     border: 1px solid var(--border);
 }
-.setting-row label { font-size: 0.85em; color: var(--text-light); }
+
+.setting-row label {
+    font-size: 0.85em;
+    color: var(--text-light);
+}
+
 .setting-input {
     width: 60px;
     padding: 6px;
@@ -392,12 +680,31 @@ body.dark .poem-card {
     background: var(--card-bg);
     color: var(--text);
 }
-.pomodoro-display { margin: 20px 0; }
-.pomodoro-phase { font-size: 1.2em; font-weight: 600; color: var(--accent-dark); margin-bottom: 4px; }
-.pomodoro-timer { font-size: 2.4em; font-weight: 700; color: var(--accent); margin: 8px 0; }
-.pomodoro-progress { font-size: 0.9em; color: var(--text-light); }
 
-/* جزیره */
+.pomodoro-display {
+    margin: 20px 0;
+}
+
+.pomodoro-phase {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: var(--accent-dark);
+    margin-bottom: 4px;
+}
+
+.pomodoro-timer {
+    font-size: 2.4em;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 8px 0;
+}
+
+.pomodoro-progress {
+    font-size: 0.9em;
+    color: var(--text-light);
+}
+
+/* ==================== جزیره پایین ==================== */
 .bottom-island {
     position: fixed;
     bottom: 16px;
@@ -413,6 +720,7 @@ body.dark .poem-card {
     border: 1px solid var(--border);
     z-index: 900;
 }
+
 .island-btn {
     background: transparent;
     border: none;
@@ -426,14 +734,18 @@ body.dark .poem-card {
     font-weight: 500;
     white-space: nowrap;
 }
+
 .island-btn.active {
     background: var(--accent);
     color: #fff;
     box-shadow: 0 4px 12px rgba(192, 133, 82, 0.35);
 }
-.island-btn:hover:not(.active) { background: var(--accent-light); }
 
-/* فوتر */
+.island-btn:hover:not(.active) {
+    background: var(--accent-light);
+}
+
+/* ==================== فوتر ==================== */
 .app-footer {
     text-align: center;
     padding: 20px 0 10px;
@@ -442,22 +754,56 @@ body.dark .poem-card {
     opacity: 0.8;
 }
 
-/* انیمیشن */
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+/* ==================== انیمیشن‌ها ==================== */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
 
-/* رسپانسیو */
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* ==================== رسپانسیو ==================== */
 @media (max-width: 500px) {
-    .app-container { padding: 8px 8px 80px 8px; }
-    .calendar-day { font-size: 2em; }
-    .calendar-month { font-size: 1.1em; }
-    .clock-face { width: 140px; height: 140px; }
-    .add-item-row { flex-wrap: wrap; }
-    .schedule-add-row { flex-wrap: wrap; }
-    .time-range-selects { flex-wrap: wrap; }
-    .time-input { min-width: 80px; }
-    .clocks-container { gap: 10px; }
-    .timer-display { font-size: 2em; }
-    .pomodoro-timer { font-size: 1.8em; }
+    .app-container {
+        padding: 8px 8px 80px 8px;
+    }
+    .calendar-day {
+        font-size: 2em;
+    }
+    .calendar-month {
+        font-size: 1.1em;
+    }
+    .clock-face {
+        width: 140px;
+        height: 140px;
+    }
+    .add-item-row {
+        flex-wrap: wrap;
+    }
+    .schedule-add-row {
+        flex-wrap: wrap;
+    }
+    .time-range-selects {
+        flex-wrap: wrap;
+    }
+    .time-input {
+        min-width: 80px;
+    }
+    .clocks-container {
+        gap: 10px;
+    }
+    .timer-display {
+        font-size: 2em;
+    }
+    .pomodoro-timer {
+        font-size: 1.8em;
+    }
 }
