@@ -1,34 +1,32 @@
-const CACHE_NAME = 'cozy-corner-v1';
+const CACHE_NAME = 'cozy-planner-cache-v1';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
     './style.css',
     './app.js',
-    './manifest.json',
-    './icon-192.png',
-    './icon-512.png'
+    './manifest.json'
 ];
 
-// مرحله نصب: فایل‌های اصلی در حافظه کش ذخیره می‌شوند
-self.addEventListener('install', event => {
+// مرحله نصب: ذخیره فایل‌های اصلی در کش
+self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME)
-            .then(cache => {
-                console.log('فایل‌های اصلی با موفقیت کش شدند.');
+            .then((cache) => {
+                console.log('فایل‌های اصلی با موفقیت کش شدند');
                 return cache.addAll(ASSETS_TO_CACHE);
             })
             .then(() => self.skipWaiting())
     );
 });
 
-// مرحله فعال‌سازی: حذف کش‌های قدیمی در صورت آپدیت نسخه برنامه
-self.addEventListener('activate', event => {
+// مرحله فعال‌سازی: پاک‌سازی کش‌های قدیمی در صورت آپدیت برنامه
+self.addEventListener('activate', (event) => {
     event.waitUntil(
-        caches.keys().then(cacheNames => {
+        caches.keys().then((cacheNames) => {
             return Promise.all(
-                cacheNames.map(cache => {
+                cacheNames.map((cache) => {
                     if (cache !== CACHE_NAME) {
-                        console.log('کش قدیمی حذف شد:', cache);
+                        console.log('کش قدیمی پاک شد:', cache);
                         return caches.delete(cache);
                     }
                 })
@@ -37,13 +35,16 @@ self.addEventListener('activate', event => {
     );
 });
 
-// مرحله واکشی (Fetch): درخواست‌ها ابتدا از کش خوانده می‌شوند تا برنامه آفلاین کار کند
-self.addEventListener('fetch', event => {
+// مدیریت درخواست‌ها: خواندن از کش در صورت قطع اینترنت
+self.addEventListener('fetch', (event) => {
+    // برای فونت‌ها و بقیه درخواست‌ها، اول کش رو چک کن، اگه نبود از شبکه بگیر
     event.respondWith(
         caches.match(event.request)
-            .then(cachedResponse => {
-                // اگر فایل در کش بود، همان را برگردان؛ در غیر این صورت از شبکه بگیر
-                return cachedResponse || fetch(event.request);
+            .then((cachedResponse) => {
+                if (cachedResponse) {
+                    return cachedResponse;
+                }
+                return fetch(event.request);
             })
     );
 });
