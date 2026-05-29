@@ -1,24 +1,23 @@
 {
-  "name": "گوشه دنج",
-  "short_name": "دنج",
-  "description": "یک گوشه آرامش‌بخش با شعرها و جملات اصیل",
-  "start_url": "index.html",
-  "display": "standalone",
-  "background_color": "#f4ebe1",
-  "theme_color": "#c8967e",
-  "orientation": "portrait-primary",
+  "short_name": "برنامه‌ریزی",
+  "name": "فضای برنامه‌ریزی دنج من",
   "icons": [
     {
       "src": "icon-192.png",
-      "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "sizes": "192x192"
     },
     {
       "src": "icon-512.png",
-      "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "sizes": "512x512"
     }
-  ]
+  ],
+  "start_url": "./index.html",
+  "background_color": "#f7f3ed",
+  "theme-color": "#eaddcf",
+  "display": "standalone",
+  "orientation": "portrait",
+  "dir": "rtl",
+  "lang": "fa-IR"
 }
