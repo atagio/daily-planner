@@ -15,13 +15,11 @@
             <div class="welcome-icon">☕</div>
             <h2>به فضای برنامه‌ریزی دنج خودت خوش اومدی</h2>
             <p>اینجا یک محیط آرام برای تنظیم کارها و زمان‌بندی روزانته.</p>
-            
             <div class="input-group">
                 <label for="user-name-input">دوست داری چی صدات کنم؟</label>
                 <input type="text" id="user-name-input" placeholder="مثلاً محمد، سارا..." autofocus autocomplete="off">
                 <span id="name-error" class="error-text"></span>
             </div>
-            
             <button id="save-name-btn">شروع کنیم ✨</button>
         </div>
     </div>
@@ -46,7 +44,16 @@
 
                 <div id="schedule-form" class="tab-content">
                     <input type="text" id="schedule-input" placeholder="عنوان برنامه...">
-                    <input type="time" id="schedule-time" required>
+                    <div class="time-range-group">
+                        <div class="time-field">
+                            <label>از ساعت:</label>
+                            <input type="time" id="schedule-start-time" required>
+                        </div>
+                        <div class="time-field">
+                            <label>تا ساعت:</label>
+                            <input type="time" id="schedule-end-time" required>
+                        </div>
+                    </div>
                     <button id="add-schedule-btn">ثبت زمان</button>
                 </div>
             </div>
@@ -65,7 +72,7 @@
 
             <div class="clocks-section cozy-card">
                 <h3>وضعیت زمانی امروز 🕰️</h3>
-                <p class="clock-subtitle">بخش‌های رنگی نشون‌دهنده زمان‌های پر شده هستن</p>
+                <p class="clock-subtitle">بخش‌های رنگی بازه‌های پر شده روی نمودار ساعت رو نشون میدن</p>
                 <div class="clocks-container">
                     <div class="clock-wrapper">
                         <h4>قبل از ظهر (AM)</h4>
@@ -81,14 +88,5 @@
     </div>
 
     <script src="app.js"></script>
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('service-worker.js')
-                .then(reg => console.log('ServiceWorker registered'))
-                .catch(err => console.log('SW registration failed: ', err));
-            });
-        }
-    </script>
 </body>
 </html>
