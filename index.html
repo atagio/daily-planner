@@ -5,16 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>برنامه‌ریزی من</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#eaddcf"> <link rel="stylesheet" href="style.css">
+    <meta name="theme-color" content="#eaddcf">
+    <link rel="stylesheet" href="style.css">
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.0.0/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-    <div id="name-modal" class="modal">
-        <div class="modal-content">
-            <h2>سلام! به فضای برنامه‌ریزی دنج خودت خوش اومدی ☕</h2>
-            <label for="user-name-input">دوست داری چی صدات کنم؟</label>
-            <input type="text" id="user-name-input" placeholder="مثلاً محمد..." autofocus>
-            <button id="save-name-btn">شروع کنیم</button>
+    <div id="welcome-screen" class="welcome-container">
+        <div class="welcome-card">
+            <div class="welcome-icon">☕</div>
+            <h2>به فضای برنامه‌ریزی دنج خودت خوش اومدی</h2>
+            <p>اینجا یک محیط آرام برای تنظیم کارها و زمان‌بندی روزانته.</p>
+            
+            <div class="input-group">
+                <label for="user-name-input">دوست داری چی صدات کنم؟</label>
+                <input type="text" id="user-name-input" placeholder="مثلاً محمد، سارا..." autofocus autocomplete="off">
+                <span id="name-error" class="error-text"></span>
+            </div>
+            
+            <button id="save-name-btn">شروع کنیم ✨</button>
         </div>
     </div>
 
@@ -61,13 +69,11 @@
                 <div class="clocks-container">
                     <div class="clock-wrapper">
                         <h4>قبل از ظهر (AM)</h4>
-                        <div class="clock" id="am-clock">
-                            </div>
+                        <div class="clock" id="am-clock"></div>
                     </div>
                     <div class="clock-wrapper">
                         <h4>بعد از ظهر (PM)</h4>
-                        <div class="clock" id="pm-clock">
-                            </div>
+                        <div class="clock" id="pm-clock"></div>
                     </div>
                 </div>
             </div>
@@ -76,12 +82,11 @@
 
     <script src="app.js"></script>
     <script>
-        // ثبت Service Worker برای قابلیت PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('service-worker.js')
-                .then(registration => console.log('ServiceWorker registered'))
-                .catch(err => console.log('ServiceWorker registration failed: ', err));
+                .then(reg => console.log('ServiceWorker registered'))
+                .catch(err => console.log('SW registration failed: ', err));
             });
         }
     </script>
