@@ -319,6 +319,7 @@ body {
     display: flex;
     gap: 8px;
     margin-bottom: 12px;
+    align-items: center;
 }
 
 .item-input {
@@ -339,8 +340,21 @@ body {
     box-shadow: 0 0 0 3px rgba(192, 133, 82, 0.08);
 }
 
+/* استایل جدید برای انتخاب بازه زمانی */
+.time-range-selects {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.range-separator {
+    font-size: 0.85em;
+    color: var(--text-light);
+    margin: 0 2px;
+}
+
 .hour-select {
-    padding: 11px 10px;
+    padding: 11px 8px;
     border: 2px solid var(--border);
     border-radius: var(--radius-sm);
     font-family: var(--font);
@@ -349,7 +363,7 @@ body {
     color: var(--text);
     cursor: pointer;
     outline: none;
-    min-width: 90px;
+    min-width: 75px;
     transition: var(--transition);
 }
 
@@ -510,6 +524,15 @@ body {
     box-shadow: inset 0 0 20px rgba(180, 140, 100, 0.12), 0 4px 16px rgba(140, 100, 60, 0.12);
 }
 
+.clock-face canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
 .clock-center {
     position: absolute;
     top: 50%;
@@ -523,48 +546,6 @@ body {
     box-shadow: 0 0 8px rgba(139, 90, 60, 0.4);
 }
 
-.hour-marker {
-    position: absolute;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.65em;
-    font-weight: 600;
-    color: var(--text-light);
-    background: #fefcf8;
-    border: 1.5px solid var(--border);
-    transition: var(--transition);
-    transform: translate(-50%, -50%);
-    cursor: default;
-}
-
-.hour-marker.busy {
-    background: var(--accent);
-    color: #fff;
-    border-color: var(--accent-dark);
-    box-shadow: 0 0 10px rgba(192, 133, 82, 0.5);
-    animation: pulseBusy 2s infinite;
-}
-
-.hour-marker.current-hour {
-    border-color: var(--accent-dark);
-    border-width: 2.5px;
-    box-shadow: 0 0 14px rgba(139, 90, 60, 0.4);
-}
-
-@keyframes pulseBusy {
-    0%,
-    100% {
-        box-shadow: 0 0 8px rgba(192, 133, 82, 0.4);
-    }
-    50% {
-        box-shadow: 0 0 18px rgba(192, 133, 82, 0.7);
-    }
-}
-
 /* فوتر */
 .app-footer {
     text-align: center;
@@ -575,33 +556,18 @@ body {
 
 /* انیمیشن‌ها */
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 @keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes bounce {
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-10px);
-    }
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
 }
 
 /* رسپانسیو */
@@ -619,19 +585,18 @@ body {
         width: 140px;
         height: 140px;
     }
-    .hour-marker {
-        width: 24px;
-        height: 24px;
-        font-size: 0.6em;
-    }
     .add-item-row {
         flex-wrap: wrap;
     }
     .schedule-add-row {
         flex-wrap: wrap;
     }
+    .time-range-selects {
+        flex-wrap: nowrap;
+    }
     .hour-select {
-        min-width: 70px;
+        min-width: 65px;
+        font-size: 0.8em;
     }
     .clocks-container {
         gap: 10px;
