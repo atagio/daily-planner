@@ -18,6 +18,7 @@
             <h2>سلام! به صفحه‌ی برنامه‌ریزی‌ات خوش اومدی</h2>
             <p>لطفاً اسم قشنگت رو بنویس تا صفحه رو برات شخصی‌سازی کنم:</p>
             <input type="text" id="nameInput" class="name-input" placeholder="اسمت رو اینجا بنویس..." autocomplete="off">
+            <p class="modal-error" id="nameError"></p>
             <button id="saveNameBtn" class="btn-primary">✨ بریم که صفحه رو ببینم</button>
             <p class="modal-hint">اسمت رو دوست دارم بدونم تا بتونم صفحه رو برات خاص کنم 💛</p>
         </div>
@@ -25,8 +26,11 @@
 
     <!-- کانتینر اصلی -->
     <div id="appContainer" class="app-container">
-        <!-- هدر با تقویم شمسی -->
+        <!-- هدر با تقویم شمسی و دکمه دارک مود -->
         <header class="app-header">
+            <div class="header-top-row">
+                <button id="darkModeToggle" class="dark-mode-btn" aria-label="تغییر تم">🌙</button>
+            </div>
             <div class="calendar-card">
                 <div class="calendar-day-name" id="weekdayName">شنبه</div>
                 <div class="calendar-main">
@@ -47,11 +51,10 @@
             </div>
         </header>
 
-        <!-- محتوای صفحات (هر سه زیر هم، با کلاس page) -->
+        <!-- محتوای صفحات -->
         <div class="pages-container">
             <!-- صفحه برنامه‌ریز -->
             <section class="page active" id="plannerPage">
-                <!-- لیست کارها -->
                 <div class="list-section">
                     <div class="section-header">
                         <h2>📝 کارهایی که باید انجام بدم</h2>
@@ -65,7 +68,6 @@
                     <p class="empty-msg" id="todoEmpty">✨ هیچ کاری ثبت نشده. یه کار جدید اضافه کن!</p>
                 </div>
                 <div class="section-divider"><span>✦</span></div>
-                <!-- بخش زمانبندی -->
                 <div class="list-section">
                     <div class="section-header">
                         <h2>🕐 برنامه‌های زمان‌بندی شده</h2>
@@ -83,7 +85,6 @@
                     <ul class="item-list" id="scheduleList"></ul>
                     <p class="empty-msg" id="scheduleEmpty">🕊️ هنوز برنامه‌ی زمان‌بندی شده‌ای نداری.</p>
                 </div>
-                <!-- ساعت‌های نموداری -->
                 <div class="clocks-section">
                     <h2 class="clocks-title">🕰️ ساعت‌های روز</h2>
                     <div class="clocks-container">
@@ -168,4 +169,4 @@
 
     <script src="app.js"></script>
 </body>
-                                    </html>
+</html>
