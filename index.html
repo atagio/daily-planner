@@ -3,23 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>گوشه دنج</title>
-    
+    <title>برنامه‌ریزی من</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#f3ece7">
-    <link rel="apple-touch-icon" href="icon-192.png">
-    
-    <link rel="stylesheet" href="style.css">
+    <meta name="theme-color" content="#eaddcf"> <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.0.0/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-    <main class="cozy-container">
-        <div class="card">
-            <h1>گوشه دنج ☕</h1>
-            <p id="quote-display">نفس عمیق بکش و یک لحظه آرامش را تجربه کن...</p>
-            <button id="new-quote-btn">یک حس خوب جدید</button>
+    <div id="name-modal" class="modal">
+        <div class="modal-content">
+            <h2>سلام! به فضای برنامه‌ریزی دنج خودت خوش اومدی ☕</h2>
+            <label for="user-name-input">دوست داری چی صدات کنم؟</label>
+            <input type="text" id="user-name-input" placeholder="مثلاً محمد..." autofocus>
+            <button id="save-name-btn">شروع کنیم</button>
         </div>
-    </main>
+    </div>
 
-    <script src="app.js" defer></script>
+    <div class="app-container" id="app-content" style="display: none;">
+        <header>
+            <div class="date-header" id="jalali-date">در حال بارگذاری تاریخ...</div>
+            <h1 id="greeting">صفحه‌ی برنامه‌ریزی ...</h1>
+        </header>
+
+        <main>
+            <div class="input-section cozy-card">
+                <div class="tabs">
+                    <button class="tab-btn active" data-target="todo-form">کار جدید (Todo)</button>
+                    <button class="tab-btn" data-target="schedule-form">برنامه زمانی (Schedule)</button>
+                </div>
+
+                <div id="todo-form" class="tab-content active">
+                    <input type="text" id="todo-input" placeholder="چه کاری باید انجام بدی؟">
+                    <button id="add-todo-btn">اضافه کن</button>
+                </div>
+
+                <div id="schedule-form" class="tab-content">
+                    <input type="text" id="schedule-input" placeholder="عنوان برنامه...">
+                    <input type="time" id="schedule-time" required>
+                    <button id="add-schedule-btn">ثبت زمان</button>
+                </div>
+            </div>
+
+            <div class="lists-section">
+                <div class="cozy-card list-card">
+                    <h3>لیست کارها (To-Do) 📝</h3>
+                    <ul id="todo-list"></ul>
+                </div>
+
+                <div class="cozy-card list-card">
+                    <h3>زمان‌بندی امروز (Schedule) ⏱️</h3>
+                    <ul id="schedule-list"></ul>
+                </div>
+            </div>
+
+            <div class="clocks-section cozy-card">
+                <h3>وضعیت زمانی امروز 🕰️</h3>
+                <p class="clock-subtitle">بخش‌های رنگی نشون‌دهنده زمان‌های پر شده هستن</p>
+                <div class="clocks-container">
+                    <div class="clock-wrapper">
+                        <h4>قبل از ظهر (AM)</h4>
+                        <div class="clock" id="am-clock">
+                            </div>
+                    </div>
+                    <div class="clock-wrapper">
+                        <h4>بعد از ظهر (PM)</h4>
+                        <div class="clock" id="pm-clock">
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // ثبت Service Worker برای قابلیت PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                .then(registration => console.log('ServiceWorker registered'))
+                .catch(err => console.log('ServiceWorker registration failed: ', err));
+            });
+        }
+    </script>
 </body>
 </html>
