@@ -78,16 +78,13 @@ const jalaliWeekdays = [
     'شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه',
 ];
 
-// محاسبه روز هفته شمسی (با استفاده از یک مرجع معلوم)
 function getJalaliWeekday(jy, jm, jd) {
     const g = jalaliToGregorian(jy, jm, jd);
     const d = new Date(g[0], g[1] - 1, g[2]);
-    const gregDay = d.getDay(); // 0=Sun -> شنبه=0 در تقویم ما
-    return gregDay; // 0=یکشنبه میلادی = شنبه شمسی
+    return d.getDay(); // 0=Sun -> شنبه
 }
 
 function jalaliToGregorian(jy, jm, jd) {
-    const g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
     jy += 1595;
     let days =
         -355668 +
@@ -97,10 +94,10 @@ function jalaliToGregorian(jy, jm, jd) {
         Math.floor((jy % 33) * 365.25);
     days = Math.round(days);
     const gy = 621 + Math.floor(days / 365);
-    const gd = days - Math.floor((gy - 621) * 365.25) - Math.floor((gy - 617) / 4) + Math.floor((gy - 617) / 100) - Math.floor((gy - 617) / 400);
-    let gm = 1;
+    let gd = days - Math.floor((gy - 621) * 365.25) - Math.floor((gy - 617) / 4) + Math.floor((gy - 617) / 100) - Math.floor((gy - 617) / 400);
     const g_dim = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     if ((gy % 4 === 0 && gy % 100 !== 0) || gy % 400 === 0) g_dim[1] = 29;
+    let gm = 1;
     let tempGd = gd;
     for (let i = 0; i < 12; i++) {
         if (tempGd <= g_dim[i]) {
@@ -117,11 +114,15 @@ function getTodayJalali() {
     return gregorianToJalali(today.getFullYear(), today.getMonth() + 1, today.getDate());
 }
 
-function formatHour12(hour) {
-    if (hour === 0) return '۱۲ ق.ظ';
-    if (hour < 12) return hour + ' ق.ظ';
-    if (hour === 12) return '۱۲ ب.ظ';
-    return (hour - 12) + ' ب.ظ';
+// فرمت ساعت به صورت ۱۲ ساعته
+function formatTime12(hour, minute) {
+    const h = hour % 12 || 12;
+    const period = hour < 12 ? 'ق.ظ' : 'ب.ظ';
+    return `${h}:${minute.toString().padStart(2, '0')} ${period}`;
+}
+
+function formatTimeRange(startH, startM, endH, endM) {
+    return `${formatTime12(startH, startM)} - ${formatTime12(endH, endM)}`;
 }
 
 // ---------- مدیریت نام کاربر ----------
@@ -134,7 +135,6 @@ let schedules = JSON.parse(localStorage.getItem('planner_schedules')) || [];
 function saveTodos() {
     localStorage.setItem('planner_todos', JSON.stringify(todos));
 }
-
 function saveSchedules() {
     localStorage.setItem('planner_schedules', JSON.stringify(schedules));
 }
@@ -145,13 +145,12 @@ function renderTodos() {
     const empty = document.getElementById('todoEmpty');
     const count = document.getElementById('todoCount');
     list.innerHTML = '';
-
     if (todos.length === 0) {
         empty.classList.remove('hidden');
         count.textContent = '۰ کار';
     } else {
         empty.classList.add('hidden');
-        count.textContent = todos.length + ' کار';
+        count.textContent = `${todos.length} کار`;
         todos.forEach((todo, index) => {
             const li = document.createElement('li');
             if (todo.done) li.classList.add('done');
@@ -169,19 +168,22 @@ function renderSchedules() {
     const empty = document.getElementById('scheduleEmpty');
     const count = document.getElementById('scheduleCount');
     list.innerHTML = '';
-
     if (schedules.length === 0) {
         empty.classList.remove('hidden');
         count.textContent = '۰ برنامه';
     } else {
         empty.classList.add('hidden');
-        count.textContent = schedules.length + ' برنامه';
-        schedules.sort((a, b) => a.hour - b.hour);
+        count.textContent = `${schedules.length} برنامه`;
+        // مرتب‌سازی بر اساس زمان شروع
+        schedules.sort((a, b) => {
+            if (a.startHour !== b.startHour) return a.startHour - b.startHour;
+            return a.startMinute - b.startMinute;
+        });
         schedules.forEach((item, index) => {
             const li = document.createElement('li');
             li.innerHTML = `
-                <span class="item-text" data-index="${index}" data-type="schedule">${item.text}</span>
-                <span class="item-time-badge">${formatHour12(item.hour)}</span>
+                <span class="item-text">${item.text}</span>
+                <span class="item-time-badge">${formatTimeRange(item.startHour, item.startMinute, item.endHour, item.endMinute)}</span>
                 <button class="item-delete" data-index="${index}" data-type="schedule">🗑️</button>
             `;
             list.appendChild(li);
@@ -189,74 +191,149 @@ function renderSchedules() {
     }
 }
 
+// رسم ساعت‌های نموداری با Canvas
 function renderClocks() {
-    const clockAM = document.getElementById('clockAM');
-    const clockPM = document.getElementById('clockPM');
-    clockAM.innerHTML = '<div class="clock-center"></div>';
-    clockPM.innerHTML = '<div class="clock-center"></div>';
+    drawClockCanvas('clockAMCanvas', 0, 12);   // قبل از ظهر
+    drawClockCanvas('clockPMCanvas', 12, 24); // بعد از ظهر
+}
 
-    const radius = 70; // برای ساعت‌های 170px
-    const centerX = 85;
-    const centerY = 85;
+function drawClockCanvas(canvasId, rangeStart, rangeEnd) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const width = canvas.width;
+    const height = canvas.height;
+    const centerX = width / 2;
+    const centerY = height / 2;
+    const radius = width / 2 - 12; // کمی فاصله از لبه
 
-    // تعیین ساعت‌های پر (ساعت‌هایی که در لیست زمانبندی هستند)
-    const busyHours = schedules.map(s => s.hour);
-    // ساعت فعلی
+    ctx.clearRect(0, 0, width, height);
+
+    // رسم دایره‌ی پس‌زمینه شفاف (اختیاری)
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+    ctx.fillStyle = '#fdf8f1';
+    ctx.fill();
+    ctx.strokeStyle = '#e8c9a0';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // رسم خطوط ساعت (اختیاری)
+    ctx.strokeStyle = '#e8d5c0';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < 12; i++) {
+        const angle = (i * 30 - 90) * Math.PI / 180;
+        const innerX = centerX + (radius - 10) * Math.cos(angle);
+        const innerY = centerY + (radius - 10) * Math.sin(angle);
+        const outerX = centerX + radius * Math.cos(angle);
+        const outerY = centerY + radius * Math.sin(angle);
+        ctx.beginPath();
+        ctx.moveTo(innerX, innerY);
+        ctx.lineTo(outerX, outerY);
+        ctx.stroke();
+    }
+
+    // نوشتن اعداد ساعت
+    ctx.fillStyle = '#6b5a4a';
+    ctx.font = 'bold 10px Vazirmatn, Tahoma';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    for (let i = 0; i < 12; i++) {
+        const hour = (i === 0 ? 12 : i); // 12 به جای 0
+        const angle = (i * 30 - 90) * Math.PI / 180;
+        const x = centerX + (radius - 18) * Math.cos(angle);
+        const y = centerY + (radius - 18) * Math.sin(angle);
+        ctx.fillText(hour.toString(), x, y);
+    }
+
+    // رسم بازه‌های مشغول
     const now = new Date();
     const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
 
-    for (let h = 0; h < 24; h++) {
-        const angle = (h * 30 - 90) * (Math.PI / 180); // هر ساعت 30 درجه، شروع از 12 در بالا
-        const x = centerX + radius * Math.cos(angle);
-        const y = centerY + radius * Math.sin(angle);
-        const label = (h % 12 === 0 ? 12 : h % 12).toString();
+    schedules.forEach(item => {
+        const startDecimal = item.startHour + item.startMinute / 60;
+        const endDecimal = item.endHour + item.endMinute / 60;
+        if (endDecimal <= startDecimal) return; // بازه نامعتبر
 
-        const marker = document.createElement('div');
-        marker.className = 'hour-marker';
-        marker.textContent = label;
-        marker.style.left = x + 'px';
-        marker.style.top = y + 'px';
+        // بررسی هم‌پوشانی با بازه‌ی این ساعت (rangeStart تا rangeEnd)
+        if (endDecimal <= rangeStart || startDecimal >= rangeEnd) return;
 
-        if (busyHours.includes(h)) {
-            marker.classList.add('busy');
-        }
-        if (h === currentHour) {
-            marker.classList.add('current-hour');
-        }
+        const clampedStart = Math.max(startDecimal, rangeStart);
+        const clampedEnd = Math.min(endDecimal, rangeEnd);
 
-        if (h < 12) {
-            clockAM.appendChild(marker);
-        } else {
-            clockPM.appendChild(marker);
-        }
+        // تبدیل به زاویه (۰ درجه = بالای ساعت، جهت عقربه‌های ساعت)
+        const startAngle = ((clampedStart - rangeStart) / 12) * 2 * Math.PI - Math.PI / 2;
+        const endAngle = ((clampedEnd - rangeStart) / 12) * 2 * Math.PI - Math.PI / 2;
+
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius - 6, startAngle, endAngle);
+        ctx.lineWidth = 18;
+        ctx.strokeStyle = 'rgba(192, 133, 82, 0.4)';
+        ctx.stroke();
+
+        // خطوط مرز بازه
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius - 6, startAngle, startAngle);
+        ctx.lineWidth = 18;
+        ctx.strokeStyle = '#c08552';
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius - 6, endAngle, endAngle);
+        ctx.stroke();
+    });
+
+    // علامت‌گذاری ساعت جاری (اگر در این بازه باشد)
+    if (currentHour >= rangeStart && currentHour < rangeEnd) {
+        const hourInRange = currentHour - rangeStart;
+        const minuteFraction = currentMinute / 60;
+        const currentAngle = ((hourInRange + minuteFraction) / 12) * 2 * Math.PI - Math.PI / 2;
+
+        // یک نقطه یا عقربه کوچک
+        const indicatorX = centerX + (radius - 15) * Math.cos(currentAngle);
+        const indicatorY = centerY + (radius - 15) * Math.sin(currentAngle);
+        ctx.beginPath();
+        ctx.arc(indicatorX, indicatorY, 4, 0, 2 * Math.PI);
+        ctx.fillStyle = '#8b5a3c';
+        ctx.fill();
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // خط از مرکز
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.lineTo(indicatorX, indicatorY);
+        ctx.strokeStyle = '#8b5a3c';
+        ctx.lineWidth = 2;
+        ctx.stroke();
     }
 }
 
-// ---------- آپدیت تقویم و شعر ----------
-function updateCalendarAndPoem() {
-    const [jy, jm, jd] = getTodayJalali();
-    const weekdayIndex = getJalaliWeekday(jy, jm, jd);
-    const weekdayName = jalaliWeekdays[weekdayIndex];
-    const monthName = jalaliMonthNames[jm - 1];
+// ---------- پر کردن انتخابگرهای زمان (نیم‌ساعته) ----------
+function populateTimeSelects() {
+    const startSelect = document.getElementById('scheduleStart');
+    const endSelect = document.getElementById('scheduleEnd');
+    if (!startSelect || !endSelect) return;
 
-    document.getElementById('weekdayName').textContent = weekdayName;
-    document.getElementById('jalaliDay').textContent = jd.toLocaleString('fa-IR');
-    document.getElementById('jalaliMonth').textContent = monthName;
-    document.getElementById('jalaliYear').textContent = jy.toLocaleString('fa-IR');
+    const options = [];
+    for (let h = 0; h < 24; h++) {
+        for (let m = 0; m < 60; m += 30) {
+            const value = `${h}:${m.toString().padStart(2, '0')}`;
+            const label = formatTime12(h, m);
+            options.push({ value, label });
+        }
+    }
 
-    // تاریخ میلادی
-    const now = new Date();
-    const gregMonthNames = ['ژانویه', 'فوریه', 'مارس', 'آوریل', 'می', 'ژوئن', 'جولای', 'اوت', 'سپتامبر', 'اکتبر', 'نوامبر', 'دسامبر'];
-    const gregStr = now.getDate() + ' ' + gregMonthNames[now.getMonth()] + ' ' + now.getFullYear();
-    document.getElementById('gregorianDate').textContent = gregStr;
-
-    // شعر روز
-    const dayOfYear = getDayOfYearJalali(jy, jm, jd);
-    const poemIndex = (dayOfYear - 1) % poems.length;
-    document.getElementById('poemText').textContent = poems[poemIndex];
-
-    // فوتر تاریخ
-    document.getElementById('footerDate').textContent = weekdayName + '، ' + jd + ' ' + monthName + ' ' + jy;
+    startSelect.innerHTML = '';
+    endSelect.innerHTML = '';
+    options.forEach(opt => {
+        const optionEl = document.createElement('option');
+        optionEl.value = opt.value;
+        optionEl.textContent = opt.label;
+        startSelect.appendChild(optionEl.cloneNode(true));
+        endSelect.appendChild(optionEl);
+    });
 }
 
 // ---------- ایونت‌ها ----------
@@ -280,7 +357,6 @@ function setupEvents() {
         input.value = '';
         input.focus();
     });
-
     document.getElementById('todoInput').addEventListener('keypress', (e) => {
         if (e.key === 'Enter') document.getElementById('addTodoBtn').click();
     });
@@ -288,16 +364,34 @@ function setupEvents() {
     // افزودن زمانبندی
     document.getElementById('addScheduleBtn').addEventListener('click', () => {
         const input = document.getElementById('scheduleInput');
-        const hourSelect = document.getElementById('scheduleHour');
+        const startVal = document.getElementById('scheduleStart').value;
+        const endVal = document.getElementById('scheduleEnd').value;
         const text = input.value.trim();
-        const hour = hourSelect.value;
-        if (!text || hour === '') return;
-        schedules.push({ text, hour: parseInt(hour) });
+        if (!text || !startVal || !endVal) return;
+
+        const [startHour, startMinute] = startVal.split(':').map(Number);
+        const [endHour, endMinute] = endVal.split(':').map(Number);
+
+        const startDecimal = startHour + startMinute / 60;
+        const endDecimal = endHour + endMinute / 60;
+        if (endDecimal <= startDecimal) {
+            alert('زمان پایان باید بعد از زمان شروع باشد.');
+            return;
+        }
+
+        schedules.push({
+            text,
+            startHour,
+            startMinute,
+            endHour,
+            endMinute
+        });
         saveSchedules();
         renderSchedules();
         renderClocks();
         input.value = '';
-        hourSelect.value = '';
+        document.getElementById('scheduleStart').value = '';
+        document.getElementById('scheduleEnd').value = '';
         input.focus();
     });
 
@@ -360,9 +454,34 @@ function updateUIWithName() {
     document.getElementById('greetingText').innerHTML = `صفحه‌ی برنامه‌ریزی <span id="userNameDisplay">${userName}</span>`;
 }
 
+// ---------- آپدیت تقویم و شعر ----------
+function updateCalendarAndPoem() {
+    const [jy, jm, jd] = getTodayJalali();
+    const weekdayIndex = getJalaliWeekday(jy, jm, jd);
+    const weekdayName = jalaliWeekdays[weekdayIndex];
+    const monthName = jalaliMonthNames[jm - 1];
+
+    document.getElementById('weekdayName').textContent = weekdayName;
+    document.getElementById('jalaliDay').textContent = jd.toLocaleString('fa-IR');
+    document.getElementById('jalaliMonth').textContent = monthName;
+    document.getElementById('jalaliYear').textContent = jy.toLocaleString('fa-IR');
+
+    const now = new Date();
+    const gregMonthNames = ['ژانویه', 'فوریه', 'مارس', 'آوریل', 'می', 'ژوئن', 'جولای', 'اوت', 'سپتامبر', 'اکتبر', 'نوامبر', 'دسامبر'];
+    const gregStr = now.getDate() + ' ' + gregMonthNames[now.getMonth()] + ' ' + now.getFullYear();
+    document.getElementById('gregorianDate').textContent = gregStr;
+
+    const dayOfYear = getDayOfYearJalali(jy, jm, jd);
+    const poemIndex = (dayOfYear - 1) % poems.length;
+    document.getElementById('poemText').textContent = poems[poemIndex];
+
+    document.getElementById('footerDate').textContent = weekdayName + '، ' + jd + ' ' + monthName + ' ' + jy;
+}
+
 // ---------- راه‌اندازی ----------
 function init() {
-    // اگر نام ذخیره شده نبود، مودال را نشان بده
+    populateTimeSelects();
+
     if (!userName) {
         document.getElementById('welcomeModal').classList.remove('hidden');
     } else {
@@ -376,10 +495,8 @@ function init() {
     renderClocks();
     setupEvents();
 
-    // به‌روزرسانی ساعت‌ها هر دقیقه
     setInterval(renderClocks, 60000);
 
-    // رجیستر سرویس ورکر
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('service-worker.js')
             .then(reg => console.log('Service Worker ثبت شد', reg))
