@@ -1,23 +1,21 @@
 {
-  "short_name": "برنامه‌ریزی",
-  "name": "فضای برنامه‌ریزی دنج من",
+  "name": "برنامه‌ریز شخصی",
+  "short_name": "برنامه‌ریز",
+  "description": "یک PWA برنامه‌ریزی شخصی دلنشین",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#fdf6ee",
+  "theme_color": "#d4a574",
   "icons": [
     {
       "src": "icon-192.png",
-      "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "type": "image/png"
     },
     {
       "src": "icon-512.png",
-      "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "type": "image/png"
     }
-  ],
-  "start_url": "./index.html",
-  "background_color": "#f7f3ed",
-  "theme-color": "#eaddcf",
-  "display": "standalone",
-  "orientation": "portrait",
-  "dir": "rtl",
-  "lang": "fa-IR"
+  ]
 }
