@@ -8,7 +8,6 @@
     --text: #3e2c1c;
     --text-light: #6b5a4a;
     --danger: #d4756b;
-    --danger-hover: #c0392b;
     --success: #7a9e7e;
     --border: #e8d5c0;
     --shadow: 0 2px 12px rgba(140, 100, 60, 0.1);
@@ -17,6 +16,21 @@
     --radius-sm: 12px;
     --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --font: 'Vazirmatn', 'Tahoma', sans-serif;
+}
+
+body.dark {
+    --bg: #2a2420;
+    --card-bg: #3e352e;
+    --accent: #d4a574;
+    --accent-light: #5e4e3e;
+    --accent-dark: #e0b899;
+    --text: #e6d7c2;
+    --text-light: #b8a898;
+    --danger: #d4756b;
+    --success: #7a9e7e;
+    --border: #5e4e3e;
+    --shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+    --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.3);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -31,6 +45,7 @@ body {
         radial-gradient(ellipse at 80% 90%, rgba(180, 140, 100, 0.08) 0%, transparent 60%);
     line-height: 1.7;
     -webkit-font-smoothing: antialiased;
+    transition: background 0.3s, color 0.3s;
 }
 
 /* مودال */
@@ -60,6 +75,13 @@ body {
 .modal-icon { font-size: 56px; margin-bottom: 12px; animation: bounce 1.5s infinite; }
 .modal-card h2 { font-size: 1.4em; color: var(--accent-dark); margin-bottom: 10px; font-weight: 600; }
 .modal-card p { color: var(--text-light); font-size: 0.95em; margin-bottom: 16px; }
+.modal-error {
+    color: var(--danger);
+    font-size: 0.85em;
+    min-height: 1.2em;
+    margin-top: -8px;
+    margin-bottom: 8px;
+}
 .name-input {
     width: 100%;
     padding: 14px 18px;
@@ -68,7 +90,7 @@ body {
     font-family: var(--font);
     font-size: 1.05em;
     text-align: center;
-    background: #fffdf9;
+    background: var(--card-bg);
     color: var(--text);
     transition: var(--transition);
     outline: none;
@@ -88,20 +110,37 @@ body {
     font-weight: 500;
 }
 .btn-primary:hover { background: var(--accent-dark); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(139, 90, 60, 0.3); }
-.modal-hint { font-size: 0.8em; color: #b0a090; margin-top: 12px; }
+.modal-hint { font-size: 0.8em; color: var(--text-light); margin-top: 12px; opacity: 0.8; }
 
-/* کانتینر اصلی */
+/* هدر */
 .app-container {
     max-width: 680px;
     margin: 0 auto;
     padding: 16px;
-    padding-bottom: 80px; /* فضای جزیره */
+    padding-bottom: 80px;
     opacity: 1;
     transition: opacity 0.5s ease;
 }
 .app-container.hidden { opacity: 0; pointer-events: none; }
+.header-top-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+}
+.dark-mode-btn {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 50%;
+    transition: var(--transition);
+    color: var(--text);
+}
+.dark-mode-btn:hover {
+    background: var(--accent-light);
+}
 
-/* هدر */
 .app-header { margin-bottom: 16px; }
 .calendar-card {
     background: var(--card-bg);
@@ -117,14 +156,14 @@ body {
 .calendar-day { font-size: 2.6em; font-weight: 700; color: var(--accent-dark); line-height: 1; }
 .calendar-month { font-size: 1.3em; color: var(--text); font-weight: 500; }
 .calendar-year { font-size: 1em; color: var(--text-light); font-weight: 400; }
-.calendar-date-detail { font-size: 0.8em; color: #b0a090; margin-top: 4px; }
+.calendar-date-detail { font-size: 0.8em; color: var(--text-light); margin-top: 4px; opacity: 0.8; }
 
 .greeting-section { text-align: center; margin-bottom: 4px; }
 .greeting-text { font-size: 1.2em; font-weight: 500; color: var(--text); margin-bottom: 8px; }
 .greeting-text span { color: var(--accent-dark); font-weight: 700; }
 
 .poem-card {
-    background: linear-gradient(135deg, #fef9f3, #fdf3e4);
+    background: linear-gradient(135deg, var(--card-bg), #fef3e0);
     border-radius: var(--radius-sm);
     padding: 14px 18px;
     border: 1px dashed var(--accent-light);
@@ -132,6 +171,9 @@ body {
     align-items: flex-start;
     gap: 8px;
     box-shadow: var(--shadow);
+}
+body.dark .poem-card {
+    background: linear-gradient(135deg, #4a3f36, #3e352e);
 }
 .poem-icon { font-size: 1.3em; flex-shrink: 0; margin-top: 2px; }
 .poem-text { font-size: 0.9em; color: var(--text-light); font-style: italic; line-height: 1.8; text-align: right; }
@@ -154,7 +196,7 @@ body {
 .section-header h2 { font-size: 1.1em; font-weight: 600; color: var(--text); }
 .item-count { font-size: 0.8em; background: var(--accent-light); color: var(--accent-dark); padding: 4px 12px; border-radius: 50px; font-weight: 500; }
 .add-item-row { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; }
-.item-input { flex: 1; padding: 11px 14px; border: 2px solid var(--border); border-radius: var(--radius-sm); font-family: var(--font); font-size: 0.9em; background: #fffdf9; color: var(--text); transition: var(--transition); outline: none; }
+.item-input { flex: 1; padding: 11px 14px; border: 2px solid var(--border); border-radius: var(--radius-sm); font-family: var(--font); font-size: 0.9em; background: var(--card-bg); color: var(--text); transition: var(--transition); outline: none; }
 .item-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(192, 133, 82, 0.08); }
 
 .time-range-selects { display: flex; align-items: center; gap: 4px; }
@@ -165,7 +207,7 @@ body {
     border-radius: var(--radius-sm);
     font-family: var(--font);
     font-size: 0.85em;
-    background: #fffdf9;
+    background: var(--card-bg);
     color: var(--text);
     cursor: pointer;
     outline: none;
@@ -195,7 +237,7 @@ body {
     align-items: center;
     justify-content: space-between;
     padding: 10px 14px;
-    background: #fffefb;
+    background: var(--card-bg);
     border-radius: var(--radius-sm);
     border: 1px solid var(--border);
     transition: var(--transition);
@@ -203,7 +245,7 @@ body {
 }
 .item-list li:hover { box-shadow: 0 2px 8px rgba(140, 100, 60, 0.08); }
 .item-list li.done { opacity: 0.6; }
-.item-list li.done .item-text { text-decoration: line-through; color: #b0a090; }
+.item-list li.done .item-text { text-decoration: line-through; color: var(--text-light); }
 
 .item-text { flex: 1; font-size: 0.9em; cursor: pointer; user-select: none; }
 .item-time-badge { font-size: 0.75em; background: var(--accent-light); color: var(--accent-dark); padding: 2px 10px; border-radius: 50px; font-weight: 500; white-space: nowrap; margin: 0 4px; }
@@ -218,16 +260,16 @@ body {
     transition: var(--transition);
 }
 .item-check { color: var(--success); }
-.item-delete { color: #c0b0a0; }
+.item-delete { color: var(--text-light); opacity: 0.7; }
 .item-check:hover { background: rgba(122, 158, 126, 0.15); }
-.item-delete:hover { color: var(--danger); background: rgba(212, 117, 107, 0.1); }
+.item-delete:hover { color: var(--danger); background: rgba(212, 117, 107, 0.1); opacity: 1; }
 
-.empty-msg { text-align: center; color: #c0b0a0; font-size: 0.9em; padding: 16px; }
+.empty-msg { text-align: center; color: var(--text-light); font-size: 0.9em; padding: 16px; opacity: 0.7; }
 .empty-msg.hidden { display: none; }
 
 .section-divider { text-align: center; font-size: 1.5em; color: var(--accent-light); padding: 4px 0; user-select: none; }
 
-/* ساعت‌های نموداری */
+/* ساعت‌ها */
 .clocks-section {
     background: var(--card-bg);
     border-radius: var(--radius);
@@ -244,7 +286,7 @@ body {
     width: 170px;
     height: 170px;
     border-radius: 50%;
-    background: #fdf8f1;
+    background: var(--card-bg);
     border: 4px solid var(--accent-light);
     position: relative;
     margin: 0 auto;
@@ -271,7 +313,7 @@ body {
     box-shadow: 0 0 8px rgba(139, 90, 60, 0.4);
 }
 
-/* کرونومتر */
+/* کرونومتر و پومودورو */
 .stopwatch-card, .pomodoro-card {
     background: var(--card-bg);
     border-radius: var(--radius);
@@ -297,7 +339,7 @@ body {
     margin-bottom: 16px;
 }
 .btn-secondary {
-    background: #f0e2ce;
+    background: var(--accent-light);
     color: var(--text);
     border: none;
     padding: 10px 20px;
@@ -307,7 +349,7 @@ body {
     cursor: pointer;
     transition: var(--transition);
 }
-.btn-secondary:hover { background: #e2cfb0; transform: translateY(-1px); }
+.btn-secondary:hover { background: var(--accent); color: #fff; transform: translateY(-1px); }
 .btn-secondary:disabled { opacity: 0.5; cursor: default; transform: none; }
 .lap-list {
     list-style: none;
@@ -335,7 +377,7 @@ body {
     display: flex;
     align-items: center;
     gap: 6px;
-    background: #fef9f3;
+    background: var(--card-bg);
     padding: 8px 14px;
     border-radius: var(--radius-sm);
     border: 1px solid var(--border);
@@ -348,14 +390,15 @@ body {
     border-radius: 8px;
     font-family: var(--font);
     text-align: center;
-    background: #fff;
+    background: var(--card-bg);
+    color: var(--text);
 }
 .pomodoro-display { margin: 20px 0; }
 .pomodoro-phase { font-size: 1.2em; font-weight: 600; color: var(--accent-dark); margin-bottom: 4px; }
 .pomodoro-timer { font-size: 2.4em; font-weight: 700; color: var(--accent); margin: 8px 0; }
 .pomodoro-progress { font-size: 0.9em; color: var(--text-light); }
 
-/* جزیره‌ی پایین */
+/* جزیره */
 .bottom-island {
     position: fixed;
     bottom: 16px;
@@ -367,7 +410,7 @@ body {
     padding: 8px 16px;
     display: flex;
     gap: 8px;
-    box-shadow: 0 8px 30px rgba(100, 70, 40, 0.2);
+    box-shadow: var(--shadow-lg);
     border: 1px solid var(--border);
     z-index: 900;
 }
@@ -389,17 +432,18 @@ body {
     color: #fff;
     box-shadow: 0 4px 12px rgba(192, 133, 82, 0.35);
 }
-.island-btn:hover:not(.active) { background: rgba(192, 133, 82, 0.1); }
+.island-btn:hover:not(.active) { background: var(--accent-light); }
 
 /* فوتر */
 .app-footer {
     text-align: center;
     padding: 20px 0 10px;
-    color: #c0b0a0;
+    color: var(--text-light);
     font-size: 0.8em;
+    opacity: 0.8;
 }
 
-/* انیمیشن‌ها */
+/* انیمیشن */
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
