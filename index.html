@@ -9,68 +9,6 @@
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment-jalaali@0.9.2/moment-jalaali.js"></script>
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* استایل overlay ورود نام */
-        .name-overlay {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: var(--bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            transition: opacity 0.4s ease;
-            font-family: var(--font);
-        }
-        body.dark .name-overlay { background: var(--bg); }
-        .name-overlay.hidden { opacity: 0; pointer-events: none; }
-        .name-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border-radius: 2rem;
-            padding: 2.5rem 2rem;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-            text-align: center;
-            width: 90%;
-            max-width: 340px;
-        }
-        .name-card h1 {
-            margin-bottom: 1.5rem;
-            color: var(--text);
-            font-weight: 700;
-            font-size: 1.6rem;
-        }
-        .name-card input {
-            width: 100%;
-            padding: 1rem 1.5rem;
-            border-radius: 2rem;
-            border: 2px solid var(--border);
-            background: var(--toggle-bg);
-            font-family: var(--font);
-            font-size: 1.1rem;
-            color: var(--text);
-            outline: none;
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-        .name-card button {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 0.8rem 2rem;
-            font-family: var(--font);
-            font-size: 1.1rem;
-            border-radius: 2rem;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background 0.3s;
-        }
-        .name-card button:hover { background: var(--accent-hover); }
-        .app-container { display: none; }
-        .app-container.visible { display: flex; }
-    </style>
 </head>
 <body>
 
@@ -100,55 +38,54 @@
         <button class="theme-toggle" id="themeToggle" aria-label="تغییر حالت تاریک/روشن">🌙</button>
     </div>
 
+    <!-- نام کاربر -->
+    <div class="user-greeting" id="userGreeting"></div>
+
     <div class="tabs">
-        <button class="tab-btn active" data-tab="todo">📋 کارها</button>
-        <button class="tab-btn" data-tab="schedule">⏰ برنامه</button>
+        <button class="tab-btn active" data-tab="todo">📋 کارهای روز</button>
+        <button class="tab-btn" data-tab="schedule">⏰ برنامه زمانی</button>
     </div>
 
-    <div class="add-task-form">
+    <!-- فرم افزودن وظیفه -->
+    <div class="add-task-form" id="addTaskForm">
         <input type="text" class="task-input" id="taskInput" placeholder="وظیفه جدید...">
-        <input type="time" class="time-input" id="taskTime" value="">
+        <!-- بخش زمان فقط برای schedule -->
+        <div class="time-selects" id="timeSelects" style="display: none;">
+            <select class="time-select" id="hourSelect">
+                <option value="">ساعت</option>
+                <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+                <option value="7">7</option><option value="8">8</option><option value="9">9</option>
+                <option value="10">10</option><option value="11">11</option><option value="12">12</option>
+            </select>
+            <select class="time-select" id="minuteSelect">
+                <option value="00">00</option><option value="15">15</option>
+                <option value="30">30</option><option value="45">45</option>
+            </select>
+            <select class="time-select" id="ampmSelect">
+                <option value="صبح">صبح</option>
+                <option value="بعدازظهر">بعدازظهر</option>
+            </select>
+        </div>
         <button class="add-btn" id="addBtn" title="افزودن">+</button>
     </div>
 
+    <!-- لیست کارها (Todo) -->
     <div class="task-list-container active" id="todoList">
         <div class="empty-message">هنوز کاری ثبت نشده 🌱</div>
     </div>
 
+    <!-- لیست برنامه (Schedule) -->
     <div class="task-list-container" id="scheduleList">
         <div class="empty-message">برنامه‌ای زمان‌بندی نشده 🌙</div>
     </div>
+
+    <!-- ساعت‌های پر (خلاصه تایم‌های اسکجول) -->
+    <div class="occupied-times" id="occupiedTimes" style="display: none;">
+        <h3>⏳ زمان‌های امروز</h3>
+        <div class="time-chips" id="timeChips"></div>
+    </div>
 </div>
-
-<script>
-    // مدیریت ورود نام و نمایش اپ
-    const nameOverlay = document.getElementById('nameOverlay');
-    const appContainer = document.getElementById('appContainer');
-    const nameInput = document.getElementById('nameInput');
-    const enterBtn = document.getElementById('enterBtn');
-
-    const savedName = localStorage.getItem('userName');
-    if (savedName) {
-        nameOverlay.classList.add('hidden');
-        appContainer.classList.add('visible');
-    } else {
-        nameOverlay.classList.remove('hidden');
-        appContainer.classList.remove('visible');
-    }
-
-    function enterApp() {
-        const name = nameInput.value.trim();
-        if (!name) return;
-        localStorage.setItem('userName', name);
-        nameOverlay.classList.add('hidden');
-        appContainer.classList.add('visible');
-    }
-
-    enterBtn.addEventListener('click', enterApp);
-    nameInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') enterApp();
-    });
-</script>
 
 <script src="app.js"></script>
 </body>
