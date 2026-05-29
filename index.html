@@ -82,33 +82,11 @@
                 </div>
                 <div class="add-item-row schedule-add-row">
                     <input type="text" id="scheduleInput" class="item-input" placeholder="عنوان برنامه..." autocomplete="off">
-                    <select id="scheduleHour" class="hour-select">
-                        <option value="">ساعت</option>
-                        <option value="0">۱۲ ق.ظ</option>
-                        <option value="1">۱ ق.ظ</option>
-                        <option value="2">۲ ق.ظ</option>
-                        <option value="3">۳ ق.ظ</option>
-                        <option value="4">۴ ق.ظ</option>
-                        <option value="5">۵ ق.ظ</option>
-                        <option value="6">۶ ق.ظ</option>
-                        <option value="7">۷ ق.ظ</option>
-                        <option value="8">۸ ق.ظ</option>
-                        <option value="9">۹ ق.ظ</option>
-                        <option value="10">۱۰ ق.ظ</option>
-                        <option value="11">۱۱ ق.ظ</option>
-                        <option value="12">۱۲ ب.ظ</option>
-                        <option value="13">۱ ب.ظ</option>
-                        <option value="14">۲ ب.ظ</option>
-                        <option value="15">۳ ب.ظ</option>
-                        <option value="16">۴ ب.ظ</option>
-                        <option value="17">۵ ب.ظ</option>
-                        <option value="18">۶ ب.ظ</option>
-                        <option value="19">۷ ب.ظ</option>
-                        <option value="20">۸ ب.ظ</option>
-                        <option value="21">۹ ب.ظ</option>
-                        <option value="22">۱۰ ب.ظ</option>
-                        <option value="23">۱۱ ب.ظ</option>
-                    </select>
+                    <div class="time-range-selects">
+                        <select id="scheduleStart" class="hour-select"></select>
+                        <span class="range-separator">تا</span>
+                        <select id="scheduleEnd" class="hour-select"></select>
+                    </div>
                     <button id="addScheduleBtn" class="btn-add">➕ افزودن</button>
                 </div>
                 <ul class="item-list" id="scheduleList"></ul>
@@ -124,6 +102,7 @@
                 <div class="clock-wrapper">
                     <h3 class="clock-label">🌅 قبل از ظهر</h3>
                     <div class="clock-face" id="clockAM">
+                        <canvas id="clockAMCanvas" width="170" height="170"></canvas>
                         <div class="clock-center"></div>
                     </div>
                 </div>
@@ -131,6 +110,7 @@
                 <div class="clock-wrapper">
                     <h3 class="clock-label">🌙 بعد از ظهر</h3>
                     <div class="clock-face" id="clockPM">
+                        <canvas id="clockPMCanvas" width="170" height="170"></canvas>
                         <div class="clock-center"></div>
                     </div>
                 </div>
