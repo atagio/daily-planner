@@ -1,299 +1,390 @@
-// لیست ۳۰ شعر انتخابی شما به ترتیب روز
-const dailyPoems = [
-    { text: "یوسف گمگشته بازآید به کنعان غم مخور / کلبه احزان شود روزی گلستان غم مخور", poet: "حافظ" },
-    { text: "آسایش دو گیتی تفسیر این دو حرف است / با دوستان مروت با دشمنان مدارا", poet: "سعدی" },
-    { text: "دوش وقت سحر از غصه نجاتم دادند / و اندر آن ظلمت شب آب حیاتم دادند", poet: "حافظ" },
-    { text: "بیا که قصر امل سخت سست بنیاد است / به باده فکر بنا کن که برقرار بوَد", poet: "حافظ" },
-    { text: "مژده‌ای دل که دگر باد صبا بازآمد / هدهد صبح خوش‌آواز شکرپرداز آمد", poet: "حافظ" },
-    { text: "روز هجران و شب فرقت یار آخر شد / زدم این فال و گذشت اختر و کار آخر شد", poet: "حافظ" },
-    { text: "بوی بهبود ز اوضاع جهان می‌شنوم / شادی از بخت بداندیش نهان می‌شنوم", poet: "سعدی" },
-    { text: "به جهان خرم از آنم که جهان خرم از اوست / عاشقم بر همه عالم که همه عالم از اوست", poet: "سعدی" },
-    { text: "دلا بسوز که سوز تو کارها بکند / نیاز نیم‌شبی دفع صد بلا بکند", poet: "حافظ" },
-    { text: "عاقبت از ما غباری ماند و از خوبان خیال / خرم آنکس که در این عالم غبارش کمتر است", poet: "صائب" },
-    { text: "ما در این در نه پی حشمت و جاه آمدیم / از بد حادثه اینجا به پناه آمدیم", poet: "حافظ" },
-    { text: "بیا که نوبت صلح است و دوستی و صفا / که دوستی و محبت هزار بار نکوست", poet: "سعدی" },
-    { text: "جهان و هر چه در او هست، سربه‌سر خوابی است / به کوشش از پی آرایش سراب نباش", poet: "بیدل" },
-    { text: "غم مخور ای دل که گردون گر کند صد پی شکست / خم می شیشه باز آید به دست شیشه‌گر", poet: "بیدل" },
-    { text: "درین چمن گل بی‌خار نیست، خوش باش / بهار اگرچه خزان دارد، خزان بهاری هم", poet: "بیدل" },
-    { text: "حاصل ما از جهان جز حسرت و اندوه نیست / خوش که چندانی نماندیم و غباری می‌شویم", poet: "صائب" },
-    { text: "نفس گره مزن از پیچ و تاب آینه‌ها / همین غبار که بستی، حجاب می‌شکند", poet: "بیدل" },
-    { text: "دل چو از خویش تهی شد، همه عالم در اوست / قطره کز خود بگذرد، بحر صفت می‌گردد", poet: "بیدل" },
-    { text: "دل شکسته ز غم اعتبار می‌گیرد / شکستن دل ما را به کار می‌آید", poet: "صائب" },
-    { text: "به لب رسیده جانم، غم فراق تو بس نیست / هنوز امید دیدار در میان می‌باشد", poet: "سعدی" },
-    { text: "دل اگر چه ز غم روزگار پر خون است / به امید گشایش، در غم فرو بسته مدار", poet: "کلیم" },
-    { text: "چه غم ز موج حوادث، که کشتی شکسته‌ای / به ساحل نجات از لطف باری می‌رسد", poet: "بیدل" },
-    { text: "چمن بی‌داغ خاطر نیست، شاد از آن مباش / که بلبل از گل خندان نصیبش خار می‌باشد", poet: "کلیم" },
-    { text: "غم مخور از سختی ایام که این دیر سپنج / روزی از پیچ و خم غم گهر آسایش آرد", poet: "صائب" },
-    { text: "جهان و هر چه در او هست، هیچ نیست ای دل / به هیچ در نگر و هیچ بر مخوان و مپیچ", poet: "بیدل" },
-    { text: "دل از غم جهان شاد دار، که غم جای دگر دارد / تو را این یک نفس فرصت، غنیمت دان و می نوش", poet: "صائب" },
-    { text: "خوش باش که در باغ جهان، یک دو نفس بیش / گل نیست که پژمرده خزان نشودش", poet: "صائب" },
-    { text: "غم فردا مبر ای دل، که قضا روزی تو / بیش از آن است که در فکر تو آید، غم نیست", poet: "کلیم" },
-    { text: "غم دنیا مخور ای دل که دنیا را وفا نیست / غم ما در دو عالم، همه باد است و هوا نیست", poet: "سعدی" },
-    { text: "سحر شد جام می در گردش آمد / چراغ شام در خواب گران رفت", poet: "کلیم" }
+// ===== app.js =====
+
+// ---------- اشعار ۳۰ روزه ----------
+const poems = [
+    'یوسف گمگشته بازآید به کنعان غم مخور / کلبه احزان شود روزی گلستان غم مخور. (حافظ)',
+    'آسایش دو گیتی تفسیر این دو حرف است / با دوستان مروت با دشمنان مدارا. (سعدی)',
+    'دوش وقت سحر از غصه نجاتم دادند / و اندر آن ظلمت شب آب حیاتم دادند. (حافظ)',
+    'بیا که قصر امل سخت سست بنیاد است / به باده فکر بنا کن که برقرار بوَد. (حافظ)',
+    'مژده‌ای دل که دگر باد صبا بازآمد / هدهد صبح خوش‌آواز شکرپرداز آمد. (حافظ)',
+    'روز هجران و شب فرقت یار آخر شد / زدم این فال و گذشت اختر و کار آخر شد. (حافظ)',
+    'بوی بهبود ز اوضاع جهان می‌شنوم / شادی از بخت بداندیش نهان می‌شنوم. (سعدی)',
+    'به جهان خرم از آنم که جهان خرم از اوست / عاشقم بر همه عالم که همه عالم از اوست. (سعدی)',
+    'دلا بسوز که سوز تو کارها بکند / نیاز نیم‌شبی دفع صد بلا بکند. (حافظ)',
+    'عاقبت از ما غباری ماند و از خوبان خیال / خرم آنکس که در این عالم غبارش کمتر است. (صائب)',
+    'ما در این در نه پی حشمت و جاه آمدیم / از بد حادثه اینجا به پناه آمدیم. (حافظ)',
+    'بیا که نوبت صلح است و دوستی و صفا / که دوستی و محبت هزار بار نکوست. (سعدی)',
+    'جهان و هر چه در او هست، سربه‌سر خوابی است / به کوشش از پی آرایش سراب مباش. (بیدل)',
+    'غم مخور ای دل که گردون گر کند صد پی شکست / خم می شیشه باز آید به دست شیشه‌گر. (بیدل)',
+    'درین چمن گل بی‌خار نیست، خوش باش / بهار اگرچه خزان دارد، خزان بهاری هم. (بیدل)',
+    'حاصل ما از جهان جز حسرت و اندوه نیست / خوش که چندانی نماندیم و غباری می‌شویم. (صائب)',
+    'نفس گره مزن از پیچ و تاب آینه‌ها / همین غبار که بستی، حجاب می‌شکند. (بیدل)',
+    'دل چو از خویش تهی شد، همه عالم در اوست / قطره کز خود بگذرد، بحر صفت می‌گردد. (بیدل)',
+    'دل شکسته ز غم اعتبار می‌گیرد / شکستن دل ما را به کار می‌آید. (صائب)',
+    'به لب رسیده جانم، غم فراق تو بس نیست / هنوز امید دیدار در میان می‌باشد. (سعدی)',
+    'دل اگر چه ز غم روزگار پر خون است / به امید گشایش، در غم فرو بسته مدار. (کلیم)',
+    'چه غم ز موج حوادث، که کشتی شکسته‌ای / به ساحل نجات از لطف باری می‌رسد. (بیدل)',
+    'چمن بی‌داغ خاطر نیست، شاد از آن مباش / که بلبل از گل خندان نصیبش خار می‌باشد. (کلیم)',
+    'غم مخور از سختی ایام که این دیر سپنج / روزی از پیچ و خم غم گهر آسایش آرد. (صائب)',
+    'جهان و هر چه در او هست، هیچ نیست ای دل / به هیچ در نگر و هیچ بر مخوان و مپیچ. (بیدل)',
+    'دل از غم جهان شاد دار، که غم جای دگر دارد / تو را این یک نفس فرصت، غنیمت دان و می نوش. (صائب)',
+    'خوش باش که در باغ جهان، یک دو نفس بیش / گل نیست که پژمرده خزان نشودش. (صائب)',
+    'غم فردا مبر ای دل، که قضا روزی تو / بیش از آن است که در فکر تو آید، غم نیست. (کلیم)',
+    'غم دنیا مخور ای دل که دنیا را وفا نیست / غم ما در دو عالم، همه باد است و هوا نیست. (سعدی)',
+    'سحر شد جام می در گردش آمد / چراغ شام در خواب گران رفت. (کلیم)',
 ];
 
-// دیتای اپلیکیشن
-let todos = JSON.parse(localStorage.getItem('cozy_todos')) || [];
-let schedules = JSON.parse(localStorage.getItem('cozy_schedules')) || [];
-
-// تبدیل اعداد انگلیسی به فارسی برای حس دنج‌تر
-function toPersianNumber(num) {
-    const farsiDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
-    return num.toString().replace(/\d/g, x => farsiDigits[x]);
-}
-
-// اجرای کدها بعد از لود شدن کامل صفحه
-document.addEventListener('DOMContentLoaded', () => {
-    initApp();
-    setupTabs();
-    setupEventListeners();
-    renderAll();
-});
-
-function initApp() {
-    // ۱. مدیریت نام کاربر
-    const userName = localStorage.getItem('cozy_user_name');
-    const modal = document.getElementById('name-modal');
-    const appContent = document.getElementById('app-content');
-
-    if (!userName) {
-        modal.style.display = 'flex';
+// ---------- تبدیل تاریخ میلادی به شمسی ----------
+function gregorianToJalali(gy, gm, gd) {
+    const g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+    const gy2 = gm > 2 ? gy + 1 : gy;
+    let days =
+        355666 +
+        365 * gy +
+        Math.floor((gy2 + 3) / 4) -
+        Math.floor((gy2 + 99) / 100) +
+        Math.floor((gy2 + 399) / 400) +
+        gd +
+        g_d_m[gm - 1];
+    let jy = -1595 + 33 * Math.floor(days / 12053);
+    days %= 12053;
+    jy += 4 * Math.floor(days / 1461);
+    days %= 1461;
+    if (days > 365) {
+        jy += Math.floor((days - 1) / 365);
+        days = (days - 1) % 365;
+    }
+    let jm, jd;
+    if (days < 186) {
+        jm = 1 + Math.floor(days / 31);
+        jd = 1 + (days % 31);
     } else {
-        modal.style.display = 'none';
-        appContent.style.display = 'block';
-        document.getElementById('greeting').textContent = `صفحه‌ی برنامه‌ریزی ${userName} ✨`;
+        jm = 7 + Math.floor((days - 186) / 30);
+        jd = 1 + ((days - 186) % 30);
     }
-
-    // ۲. نمایش تاریخ شمسی بومی
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    const todayJalali = new Intl.DateTimeFormat('fa-IR', options).format(new Date());
-    document.getElementById('jalali-date').textContent = todayJalali;
-
-    // ۳. سیستم مدیریت و تزریق شعر روزانه
-    initDailyPoem();
+    return [jy, jm, jd];
 }
 
-function initDailyPoem() {
-    let startDayStr = localStorage.getItem('cozy_start_date');
-    if (!startDayStr) {
-        startDayStr = new Date().toISOString().split('T')[0];
-        localStorage.setItem('cozy_start_date', startDayStr);
-    }
-
-    const diffTime = Math.abs(new Date() - new Date(startDayStr));
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    const poemIndex = diffDays % 30; // چرخش بین ۳۰ شعر بعد از روز سی‌ام
-    const todayPoem = dailyPoems[poemIndex];
-
-    // ساخت المان شعر دنج و تزریق آن زیر هدر
-    const header = document.querySelector('header');
-    const poemDiv = document.createElement('div');
-    poemDiv.className = 'cozy-card';
-    poemDiv.style.margin = '15px 0 0 0';
-    poemDiv.style.padding = '14px';
-    poemDiv.style.fontStyle = 'italic';
-    poemDiv.style.fontSize = '0.95rem';
-    poemDiv.style.textAlign = 'center';
-    poemDiv.style.lineHeight = '1.8';
-    poemDiv.style.background = 'linear-gradient(to right, #fbf9f6, #f5eee6)';
-    poemDiv.innerHTML = `« ${todayPoem.text} » <br> <span style="font-size: 0.8rem; color: #8e6c58; display:block; margin-top:5px; font-weight:bold;">— ${todayPoem.poet}</span>`;
-    
-    header.appendChild(poemDiv);
+function getDayOfYearJalali(jy, jm, jd) {
+    if (jm <= 6) return (jm - 1) * 31 + jd;
+    return 186 + (jm - 7) * 30 + jd;
 }
 
-// مدیریت جابجایی بین تب‌ها
-function setupTabs() {
-    const tabButtons = document.querySelectorAll('.tab-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
+const jalaliMonthNames = [
+    'فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور',
+    'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند',
+];
+const jalaliWeekdays = [
+    'شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه',
+];
 
-    tabButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            tabButtons.forEach(b => b.classList.remove('active'));
-            tabContents.forEach(c => c.classList.remove('active'));
-
-            btn.classList.add('active');
-            document.getElementById(btn.dataset.target).classList.add('active');
-        });
-    });
+// محاسبه روز هفته شمسی (با استفاده از یک مرجع معلوم)
+function getJalaliWeekday(jy, jm, jd) {
+    const g = jalaliToGregorian(jy, jm, jd);
+    const d = new Date(g[0], g[1] - 1, g[2]);
+    const gregDay = d.getDay(); // 0=Sun -> شنبه=0 در تقویم ما
+    return gregDay; // 0=یکشنبه میلادی = شنبه شمسی
 }
 
-function setupEventListeners() {
-    // دکمه ذخیره نام
-    document.getElementById('save-name-btn').addEventListener('click', () => {
-        const nameInput = document.getElementById('user-name-input').value.trim();
-        if (nameInput) {
-            localStorage.setItem('cozy_user_name', nameInput);
-            document.getElementById('name-modal').style.display = 'none';
-            document.getElementById('app-content').style.display = 'block';
-            document.getElementById('greeting').textContent = `صفحه‌ی برنامه‌ریزی ${nameInput} ✨`;
+function jalaliToGregorian(jy, jm, jd) {
+    const g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+    jy += 1595;
+    let days =
+        -355668 +
+        jd +
+        (jm <= 6 ? (jm - 1) * 31 : 186 + (jm - 7) * 30) +
+        Math.floor(jy / 33) * 12053 +
+        Math.floor((jy % 33) * 365.25);
+    days = Math.round(days);
+    const gy = 621 + Math.floor(days / 365);
+    const gd = days - Math.floor((gy - 621) * 365.25) - Math.floor((gy - 617) / 4) + Math.floor((gy - 617) / 100) - Math.floor((gy - 617) / 400);
+    let gm = 1;
+    const g_dim = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    if ((gy % 4 === 0 && gy % 100 !== 0) || gy % 400 === 0) g_dim[1] = 29;
+    let tempGd = gd;
+    for (let i = 0; i < 12; i++) {
+        if (tempGd <= g_dim[i]) {
+            gm = i + 1;
+            break;
         }
-    });
-
-    // افزودن To-Do
-    document.getElementById('add-todo-btn').addEventListener('click', addTodo);
-    document.getElementById('todo-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') addTodo(); });
-
-    // افزودن Schedule
-    document.getElementById('add-schedule-btn').addEventListener('click', addSchedule);
+        tempGd -= g_dim[i];
+    }
+    return [gy, gm, tempGd];
 }
 
-// افزودن تسک جدید به لیست کارها
-function addTodo() {
-    const input = document.getElementById('todo-input');
-    const text = input.value.trim();
-    if (!text) return;
-
-    todos.push({ id: Date.now(), text, completed: false });
-    localStorage.setItem('cozy_todos', JSON.stringify(todos));
-    input.value = '';
-    renderAll();
+function getTodayJalali() {
+    const today = new Date();
+    return gregorianToJalali(today.getFullYear(), today.getMonth() + 1, today.getDate());
 }
 
-// افزودن برنامه زمانی جدید
-function addSchedule() {
-    const titleInput = document.getElementById('schedule-input');
-    const timeInput = document.getElementById('schedule-time');
-    
-    const title = titleInput.value.trim();
-    const time = timeInput.value;
-
-    if (!title || !time) return;
-
-    schedules.push({ id: Date.now(), title, time });
-    // مرتب‌سازی برنامه‌ها بر اساس ساعت فعلی
-    schedules.sort((a, b) => a.time.localeCompare(b.time));
-    
-    localStorage.setItem('cozy_schedules', JSON.stringify(schedules));
-    titleInput.value = '';
-    timeInput.value = '';
-    
-    renderAll();
+function formatHour12(hour) {
+    if (hour === 0) return '۱۲ ق.ظ';
+    if (hour < 12) return hour + ' ق.ظ';
+    if (hour === 12) return '۱۲ ب.ظ';
+    return (hour - 12) + ' ب.ظ';
 }
 
-function deleteTodo(id) {
-    todos = todos.filter(t => t.id !== id);
-    localStorage.setItem('cozy_todos', JSON.stringify(todos));
-    renderAll();
+// ---------- مدیریت نام کاربر ----------
+let userName = localStorage.getItem('planner_userName') || '';
+
+// ---------- مدیریت داده‌ها ----------
+let todos = JSON.parse(localStorage.getItem('planner_todos')) || [];
+let schedules = JSON.parse(localStorage.getItem('planner_schedules')) || [];
+
+function saveTodos() {
+    localStorage.setItem('planner_todos', JSON.stringify(todos));
 }
 
-function deleteSchedule(id) {
-    schedules = schedules.filter(s => s.id !== id);
-    localStorage.setItem('cozy_schedules', JSON.stringify(schedules));
-    renderAll();
+function saveSchedules() {
+    localStorage.setItem('planner_schedules', JSON.stringify(schedules));
 }
 
-function toggleTodo(id) {
-    todos = todos.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
-    localStorage.setItem('cozy_todos', JSON.stringify(todos));
-    renderAll();
-}
-
-// رندر کردن همزمان تمام بخش‌ها و به‌روزرسانی ساعت‌ها
-function renderAll() {
-    renderTodoList();
-    renderScheduleList();
-    drawClocks();
-}
-
-function renderTodoList() {
-    const listEl = document.getElementById('todo-list');
-    listEl.innerHTML = '';
+// ---------- رندرینگ ----------
+function renderTodos() {
+    const list = document.getElementById('todoList');
+    const empty = document.getElementById('todoEmpty');
+    const count = document.getElementById('todoCount');
+    list.innerHTML = '';
 
     if (todos.length === 0) {
-        listEl.innerHTML = `<li class="todo-item" style="border:none; justify-content:center; color:#8a7a71; font-size:0.9rem;">لیست کارهای امروز خالیه ☕</li>`;
-        return;
+        empty.classList.remove('hidden');
+        count.textContent = '۰ کار';
+    } else {
+        empty.classList.add('hidden');
+        count.textContent = todos.length + ' کار';
+        todos.forEach((todo, index) => {
+            const li = document.createElement('li');
+            if (todo.done) li.classList.add('done');
+            li.innerHTML = `
+                <span class="item-text" data-index="${index}" data-type="todo">${todo.text}</span>
+                <button class="item-delete" data-index="${index}" data-type="todo">🗑️</button>
+            `;
+            list.appendChild(li);
+        });
     }
-
-    todos.forEach(todo => {
-        const li = document.createElement('li');
-        li.className = `todo-item ${todo.completed ? 'completed' : ''}`;
-        
-        li.innerHTML = `
-            <span class="item-text">${todo.text}</span>
-            <span class="delete-btn">✕</span>
-        `;
-
-        li.querySelector('.item-text').addEventListener('click', () => toggleTodo(todo.id));
-        li.querySelector('.delete-btn').addEventListener('click', () => deleteTodo(todo.id));
-        
-        listEl.appendChild(li);
-    });
 }
 
-function renderScheduleList() {
-    const listEl = document.getElementById('schedule-list');
-    listEl.innerHTML = '';
+function renderSchedules() {
+    const list = document.getElementById('scheduleList');
+    const empty = document.getElementById('scheduleEmpty');
+    const count = document.getElementById('scheduleCount');
+    list.innerHTML = '';
 
     if (schedules.length === 0) {
-        listEl.innerHTML = `<li style="border:none; justify-content:center; color:#8a7a71; font-size:0.9rem;">هنوز زمان‌بندی‌ای ثبت نکردی ⏱️</li>`;
-        return;
+        empty.classList.remove('hidden');
+        count.textContent = '۰ برنامه';
+    } else {
+        empty.classList.add('hidden');
+        count.textContent = schedules.length + ' برنامه';
+        schedules.sort((a, b) => a.hour - b.hour);
+        schedules.forEach((item, index) => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <span class="item-text" data-index="${index}" data-type="schedule">${item.text}</span>
+                <span class="item-time-badge">${formatHour12(item.hour)}</span>
+                <button class="item-delete" data-index="${index}" data-type="schedule">🗑️</button>
+            `;
+            list.appendChild(li);
+        });
     }
-
-    schedules.forEach(item => {
-        const li = document.createElement('li');
-        
-        // تبدیل زمان به فرمت فارسی شیک
-        const timeParts = item.time.split(':');
-        const formattedTime = toPersianNumber(`${timeParts[0]}:${timeParts[1]}`);
-
-        li.innerHTML = `
-            <span class="item-text"><strong>[${formattedTime}]</strong> ${item.title}</span>
-            <span class="delete-btn">✕</span>
-        `;
-
-        li.querySelector('.delete-btn').addEventListener('click', () => deleteSchedule(item.id));
-        listEl.appendChild(li);
-    });
 }
 
-// رسم کردن ساعت‌های ۱۲ ساعته بصری (AM و PM)
-function drawClocks() {
-    const amClock = document.getElementById('am-clock');
-    const pmClock = document.getElementById('pm-clock');
-    
-    amClock.innerHTML = '';
-    pmClock.innerHTML = '';
+function renderClocks() {
+    const clockAM = document.getElementById('clockAM');
+    const clockPM = document.getElementById('clockPM');
+    clockAM.innerHTML = '<div class="clock-center"></div>';
+    clockPM.innerHTML = '<div class="clock-center"></div>';
 
-    // مجموعه ساعت‌های پر شده بر اساس جدول زمان‌بندی
-    const occupiedAM = new Set();
-    const occupiedPM = new Set();
+    const radius = 70; // برای ساعت‌های 170px
+    const centerX = 85;
+    const centerY = 85;
 
-    schedules.forEach(item => {
-        const hour = parseInt(item.time.split(':')[0], 10);
-        if (hour >= 12) {
-            // بعد از ظهر PM (ساعت ۱۲ تا ۲۳)
-            const pmHour = hour === 12 ? 12 : hour - 12;
-            occupiedPM.add(pmHour);
+    // تعیین ساعت‌های پر (ساعت‌هایی که در لیست زمانبندی هستند)
+    const busyHours = schedules.map(s => s.hour);
+    // ساعت فعلی
+    const now = new Date();
+    const currentHour = now.getHours();
+
+    for (let h = 0; h < 24; h++) {
+        const angle = (h * 30 - 90) * (Math.PI / 180); // هر ساعت 30 درجه، شروع از 12 در بالا
+        const x = centerX + radius * Math.cos(angle);
+        const y = centerY + radius * Math.sin(angle);
+        const label = (h % 12 === 0 ? 12 : h % 12).toString();
+
+        const marker = document.createElement('div');
+        marker.className = 'hour-marker';
+        marker.textContent = label;
+        marker.style.left = x + 'px';
+        marker.style.top = y + 'px';
+
+        if (busyHours.includes(h)) {
+            marker.classList.add('busy');
+        }
+        if (h === currentHour) {
+            marker.classList.add('current-hour');
+        }
+
+        if (h < 12) {
+            clockAM.appendChild(marker);
         } else {
-            // قبل از ظهر AM (ساعت ۰ تا ۱۱)
-            const amHour = hour === 0 ? 12 : hour;
-            occupiedAM.add(amHour);
+            clockPM.appendChild(marker);
+        }
+    }
+}
+
+// ---------- آپدیت تقویم و شعر ----------
+function updateCalendarAndPoem() {
+    const [jy, jm, jd] = getTodayJalali();
+    const weekdayIndex = getJalaliWeekday(jy, jm, jd);
+    const weekdayName = jalaliWeekdays[weekdayIndex];
+    const monthName = jalaliMonthNames[jm - 1];
+
+    document.getElementById('weekdayName').textContent = weekdayName;
+    document.getElementById('jalaliDay').textContent = jd.toLocaleString('fa-IR');
+    document.getElementById('jalaliMonth').textContent = monthName;
+    document.getElementById('jalaliYear').textContent = jy.toLocaleString('fa-IR');
+
+    // تاریخ میلادی
+    const now = new Date();
+    const gregMonthNames = ['ژانویه', 'فوریه', 'مارس', 'آوریل', 'می', 'ژوئن', 'جولای', 'اوت', 'سپتامبر', 'اکتبر', 'نوامبر', 'دسامبر'];
+    const gregStr = now.getDate() + ' ' + gregMonthNames[now.getMonth()] + ' ' + now.getFullYear();
+    document.getElementById('gregorianDate').textContent = gregStr;
+
+    // شعر روز
+    const dayOfYear = getDayOfYearJalali(jy, jm, jd);
+    const poemIndex = (dayOfYear - 1) % poems.length;
+    document.getElementById('poemText').textContent = poems[poemIndex];
+
+    // فوتر تاریخ
+    document.getElementById('footerDate').textContent = weekdayName + '، ' + jd + ' ' + monthName + ' ' + jy;
+}
+
+// ---------- ایونت‌ها ----------
+function setupEvents() {
+    // تب‌ها
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
+    });
+
+    // افزودن تودو
+    document.getElementById('addTodoBtn').addEventListener('click', () => {
+        const input = document.getElementById('todoInput');
+        const text = input.value.trim();
+        if (!text) return;
+        todos.push({ text, done: false });
+        saveTodos();
+        renderTodos();
+        input.value = '';
+        input.focus();
+    });
+
+    document.getElementById('todoInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') document.getElementById('addTodoBtn').click();
+    });
+
+    // افزودن زمانبندی
+    document.getElementById('addScheduleBtn').addEventListener('click', () => {
+        const input = document.getElementById('scheduleInput');
+        const hourSelect = document.getElementById('scheduleHour');
+        const text = input.value.trim();
+        const hour = hourSelect.value;
+        if (!text || hour === '') return;
+        schedules.push({ text, hour: parseInt(hour) });
+        saveSchedules();
+        renderSchedules();
+        renderClocks();
+        input.value = '';
+        hourSelect.value = '';
+        input.focus();
+    });
+
+    document.getElementById('scheduleInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') document.getElementById('addScheduleBtn').click();
+    });
+
+    // کلیک روی متن تودو (تغییر وضعیت done)
+    document.getElementById('todoList').addEventListener('click', (e) => {
+        if (e.target.classList.contains('item-text') && e.target.dataset.type === 'todo') {
+            const index = parseInt(e.target.dataset.index);
+            todos[index].done = !todos[index].done;
+            saveTodos();
+            renderTodos();
         }
     });
 
-    // ایجاد ۱۲ نقطه دایره‌ای روی هر ساعت با روابط مثلثاتی
-    createClockNodes(amClock, occupiedAM);
-    createClockNodes(pmClock, occupiedPM);
+    // حذف آیتم‌ها
+    document.getElementById('todoList').addEventListener('click', (e) => {
+        if (e.target.classList.contains('item-delete') && e.target.dataset.type === 'todo') {
+            const index = parseInt(e.target.dataset.index);
+            todos.splice(index, 1);
+            saveTodos();
+            renderTodos();
+        }
+    });
+
+    document.getElementById('scheduleList').addEventListener('click', (e) => {
+        if (e.target.classList.contains('item-delete') && e.target.dataset.type === 'schedule') {
+            const index = parseInt(e.target.dataset.index);
+            schedules.splice(index, 1);
+            saveSchedules();
+            renderSchedules();
+            renderClocks();
+        }
+    });
+
+    // مودال ورود نام
+    document.getElementById('saveNameBtn').addEventListener('click', () => {
+        const nameInput = document.getElementById('nameInput');
+        const name = nameInput.value.trim();
+        if (!name) {
+            nameInput.focus();
+            return;
+        }
+        userName = name;
+        localStorage.setItem('planner_userName', name);
+        document.getElementById('welcomeModal').classList.add('hidden');
+        updateUIWithName();
+    });
+
+    document.getElementById('nameInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') document.getElementById('saveNameBtn').click();
+    });
 }
 
-function createClockNodes(clockContainer, occupiedSet) {
-    const radius = 62; // شعاع قرارگیری گره‌ها داخل دایره ۱۶۰ پیکسلی
-    const centerX = 80;
-    const centerY = 80;
+function updateUIWithName() {
+    document.getElementById('userNameDisplay').textContent = userName;
+    document.getElementById('footerName').textContent = userName;
+    document.getElementById('greetingText').innerHTML = `صفحه‌ی برنامه‌ریزی <span id="userNameDisplay">${userName}</span>`;
+}
 
-    for (let h = 1; h <= 12; h++) {
-        const node = document.createElement('div');
-        node.className = `hour-node ${occupiedSet.has(h) ? 'occupied' : ''}`;
-        node.textContent = toPersianNumber(h);
+// ---------- راه‌اندازی ----------
+function init() {
+    // اگر نام ذخیره شده نبود، مودال را نشان بده
+    if (!userName) {
+        document.getElementById('welcomeModal').classList.remove('hidden');
+    } else {
+        document.getElementById('welcomeModal').classList.add('hidden');
+        updateUIWithName();
+    }
 
-        // محاسبه زاویه هر ساعت روی دایره (کم کردن ۹۰ درجه برای شروع از ساعت ۱۲ بالا)
-        const angle = (h * 30 - 90) * (Math.PI / 180);
-        const x = centerX + radius * Math.cos(angle);
-        const y = centerY + radius * Math.sin(angle);
+    updateCalendarAndPoem();
+    renderTodos();
+    renderSchedules();
+    renderClocks();
+    setupEvents();
 
-        node.style.left = `${x}px`;
-        node.style.top = `${y}px`;
+    // به‌روزرسانی ساعت‌ها هر دقیقه
+    setInterval(renderClocks, 60000);
 
-        clockContainer.appendChild(node);
+    // رجیستر سرویس ورکر
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('service-worker.js')
+            .then(reg => console.log('Service Worker ثبت شد', reg))
+            .catch(err => console.log('خطای Service Worker:', err));
     }
 }
+
+document.addEventListener('DOMContentLoaded', init);
