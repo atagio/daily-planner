@@ -1,0 +1,398 @@
+/* =============================================
+   style.css - طراحی دنج با تم روشن و تاریک
+   ============================================= */
+
+/* ----- ریست و فونت ----- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ----- متغیرهای رنگ (حالت روشن) ----- */
+:root {
+  --bg: #fef7f2;
+  --card-bg: rgba(255, 255, 255, 0.85);
+  --text: #3e3a38;
+  --text-secondary: #6b5e57;
+  --accent: #d4937c;
+  --accent-hover: #c27a63;
+  --border: rgba(180, 140, 120, 0.2);
+  --shadow: 0 8px 30px rgba(150, 120, 100, 0.1);
+  --todo-done: #9bb7a2;
+  --danger: #d98c7a;
+  --schedule-time: #b9927c;
+  --toggle-bg: #f3e3da;
+  --blob1: #fdd9c8;
+  --blob2: #e0e8d8;
+  --blob3: #f3e1e1;
+  --font: 'Vazirmatn', sans-serif;
+}
+
+/* ----- متغیرهای رنگ (حالت تاریک) ----- */
+body.dark {
+  --bg: #2a2428;
+  --card-bg: rgba(50, 44, 48, 0.9);
+  --text: #e6ddd6;
+  --text-secondary: #b9a69b;
+  --accent: #c48e7a;
+  --accent-hover: #d9a48c;
+  --border: rgba(200, 170, 150, 0.25);
+  --shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  --todo-done: #7c9a84;
+  --danger: #c97a6a;
+  --schedule-time: #c49b86;
+  --toggle-bg: #443a3e;
+  --blob1: #4d3440;
+  --blob2: #3d4a3a;
+  --blob3: #4f3b3e;
+}
+
+/* ----- بدنه و انتقال تم ----- */
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 1.5rem 1rem;
+  transition: background 0.4s ease, color 0.4s ease;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ----- پس‌زمینه متحرک (blobها) ----- */
+.animated-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.6;
+  animation: float 18s infinite ease-in-out;
+  will-change: transform;
+}
+
+.blob:nth-child(1) {
+  width: 350px;
+  height: 350px;
+  background: var(--blob1);
+  top: -80px;
+  left: -60px;
+  animation-delay: 0s;
+}
+.blob:nth-child(2) {
+  width: 400px;
+  height: 400px;
+  background: var(--blob2);
+  bottom: -100px;
+  right: -80px;
+  animation-delay: -6s;
+}
+.blob:nth-child(3) {
+  width: 280px;
+  height: 280px;
+  background: var(--blob3);
+  top: 50%;
+  left: 40%;
+  animation-delay: -12s;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(30px, -40px) scale(1.05); }
+  50% { transform: translate(-15px, 25px) scale(0.98); }
+  75% { transform: translate(-25px, -20px) scale(1.03); }
+}
+
+/* ----- کانتینر اصلی اپ ----- */
+.app-container {
+  width: 100%;
+  max-width: 500px;
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  border-radius: 2.5rem;
+  padding: 2rem 1.5rem 1.5rem;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  transition: all 0.4s ease;
+  position: relative;
+  z-index: 1;
+}
+
+/* ----- هدر: تاریخ شمسی و دکمه تم ----- */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.date-display {
+  display: flex;
+  flex-direction: column;
+}
+
+.persian-date {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.weekday {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-top: 0.2rem;
+}
+
+.theme-toggle {
+  background: var(--toggle-bg);
+  border: none;
+  border-radius: 3rem;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.theme-toggle:hover {
+  transform: scale(1.05);
+  background: var(--accent);
+  color: white;
+}
+
+/* ----- تب‌ها (Todo / Schedule) ----- */
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  background: var(--toggle-bg);
+  border-radius: 2rem;
+  padding: 0.3rem;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 0.8rem 0;
+  border: none;
+  background: transparent;
+  border-radius: 2rem;
+  font-family: var(--font);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tab-btn.active {
+  background: var(--card-bg);
+  color: var(--accent);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+/* ----- فرم افزودن وظیفه ----- */
+.add-task-form {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.task-input {
+  flex: 2;
+  min-width: 180px;
+  padding: 0.9rem 1.2rem;
+  border-radius: 2rem;
+  border: 2px solid var(--border);
+  background: var(--card-bg);
+  font-family: var(--font);
+  font-size: 0.95rem;
+  color: var(--text);
+  outline: none;
+  transition: border 0.3s;
+}
+
+.task-input:focus {
+  border-color: var(--accent);
+}
+
+.time-input {
+  flex: 1;
+  min-width: 100px;
+  padding: 0.9rem 1rem;
+  border-radius: 2rem;
+  border: 2px solid var(--border);
+  background: var(--card-bg);
+  font-family: var(--font);
+  color: var(--text);
+  outline: none;
+  transition: border 0.3s;
+}
+
+.add-btn {
+  background: var(--accent);
+  border: none;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  color: white;
+  font-size: 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  flex-shrink: 0;
+}
+
+.add-btn:hover {
+  background: var(--accent-hover);
+  transform: scale(1.05);
+}
+
+/* ----- لیست وظایف ----- */
+.task-list-container {
+  display: none;
+  flex-direction: column;
+  gap: 0.8rem;
+  max-height: 380px;
+  overflow-y: auto;
+  padding-right: 0.3rem;
+}
+
+.task-list-container.active {
+  display: flex;
+}
+
+/* ----- هر آیتم وظیفه ----- */
+.task-item {
+  display: flex;
+  align-items: center;
+  background: var(--toggle-bg);
+  padding: 0.9rem 1.2rem;
+  border-radius: 2rem;
+  gap: 0.8rem;
+  transition: all 0.3s;
+  animation: fadeSlideIn 0.3s ease;
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.task-checkbox {
+  appearance: none;
+  width: 1.3rem;
+  height: 1.3rem;
+  border: 2px solid var(--accent);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.task-checkbox:checked {
+  background: var(--todo-done);
+  border-color: var(--todo-done);
+}
+
+.task-checkbox:checked::after {
+  content: "✓";
+  color: white;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.task-text {
+  flex: 1;
+  font-size: 0.95rem;
+  word-break: break-word;
+}
+
+.task-text.done {
+  text-decoration: line-through;
+  color: var(--todo-done);
+}
+
+.task-time {
+  font-size: 0.8rem;
+  color: var(--schedule-time);
+  background: var(--card-bg);
+  padding: 0.2rem 0.7rem;
+  border-radius: 2rem;
+  white-space: nowrap;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  color: var(--danger);
+  font-size: 1.2rem;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.delete-btn:hover {
+  opacity: 1;
+}
+
+/* ----- پیام خالی ----- */
+.empty-message {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 2rem;
+  font-size: 0.9rem;
+  display: none;
+}
+
+.task-list-container.active .empty-message:only-child {
+  display: block;
+}
+
+/* ----- اسکرول بار زیبا ----- */
+.task-list-container::-webkit-scrollbar {
+  width: 5px;
+}
+.task-list-container::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 10px;
+}
+
+/* ----- ریسپانسیو برای موبایل‌های خیلی کوچک ----- */
+@media (max-width: 400px) {
+  .add-task-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .task-input, .time-input {
+    min-width: 0;
+    width: 100%;
+  }
+  .add-btn {
+    width: 100%;
+    border-radius: 2rem;
+  }
+}
