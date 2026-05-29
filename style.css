@@ -61,7 +61,6 @@ body {
     padding: 20px;
     animation: fadeIn 0.4s ease;
 }
-.modal-overlay.hidden { display: none; }
 .modal-card {
     background: var(--card-bg);
     border-radius: var(--radius);
