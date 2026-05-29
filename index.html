@@ -2,91 +2,24 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>برنامه‌ریز روز</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>گوشه دنج</title>
+    
     <link rel="manifest" href="manifest.json">
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/moment-jalaali@0.9.2/moment-jalaali.js"></script>
+    <meta name="theme-color" content="#f3ece7">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<!-- پس‌زمینه متحرک -->
-<div class="animated-bg">
-    <div class="blob"></div>
-    <div class="blob"></div>
-    <div class="blob"></div>
-</div>
-
-<!-- overlay ورود نام -->
-<div class="name-overlay" id="nameOverlay">
-    <div class="name-card">
-        <h1>🌿 سلام! اسمت رو بگو</h1>
-        <input type="text" id="nameInput" placeholder="اسم قشنگت..." autofocus>
-        <button id="enterBtn">برو به برنامه</button>
-    </div>
-</div>
-
-<!-- اپ اصلی -->
-<div class="app-container" id="appContainer">
-    <div class="header">
-        <div class="date-display">
-            <span class="persian-date" id="persianDate"></span>
-            <span class="weekday" id="weekday"></span>
+    <main class="cozy-container">
+        <div class="card">
+            <h1>گوشه دنج ☕</h1>
+            <p id="quote-display">نفس عمیق بکش و یک لحظه آرامش را تجربه کن...</p>
+            <button id="new-quote-btn">یک حس خوب جدید</button>
         </div>
-        <button class="theme-toggle" id="themeToggle" aria-label="تغییر حالت تاریک/روشن">🌙</button>
-    </div>
+    </main>
 
-    <!-- نام کاربر -->
-    <div class="user-greeting" id="userGreeting"></div>
-
-    <div class="tabs">
-        <button class="tab-btn active" data-tab="todo">📋 کارهای روز</button>
-        <button class="tab-btn" data-tab="schedule">⏰ برنامه زمانی</button>
-    </div>
-
-    <!-- فرم افزودن وظیفه -->
-    <div class="add-task-form" id="addTaskForm">
-        <input type="text" class="task-input" id="taskInput" placeholder="وظیفه جدید...">
-        <!-- بخش زمان فقط برای schedule -->
-        <div class="time-selects" id="timeSelects" style="display: none;">
-            <select class="time-select" id="hourSelect">
-                <option value="">ساعت</option>
-                <option value="1">1</option><option value="2">2</option><option value="3">3</option>
-                <option value="4">4</option><option value="5">5</option><option value="6">6</option>
-                <option value="7">7</option><option value="8">8</option><option value="9">9</option>
-                <option value="10">10</option><option value="11">11</option><option value="12">12</option>
-            </select>
-            <select class="time-select" id="minuteSelect">
-                <option value="00">00</option><option value="15">15</option>
-                <option value="30">30</option><option value="45">45</option>
-            </select>
-            <select class="time-select" id="ampmSelect">
-                <option value="صبح">صبح</option>
-                <option value="بعدازظهر">بعدازظهر</option>
-            </select>
-        </div>
-        <button class="add-btn" id="addBtn" title="افزودن">+</button>
-    </div>
-
-    <!-- لیست کارها (Todo) -->
-    <div class="task-list-container active" id="todoList">
-        <div class="empty-message">هنوز کاری ثبت نشده 🌱</div>
-    </div>
-
-    <!-- لیست برنامه (Schedule) -->
-    <div class="task-list-container" id="scheduleList">
-        <div class="empty-message">برنامه‌ای زمان‌بندی نشده 🌙</div>
-    </div>
-
-    <!-- ساعت‌های پر (خلاصه تایم‌های اسکجول) -->
-    <div class="occupied-times" id="occupiedTimes" style="display: none;">
-        <h3>⏳ زمان‌های امروز</h3>
-        <div class="time-chips" id="timeChips"></div>
-    </div>
-</div>
-
-<script src="app.js"></script>
+    <script src="app.js" defer></script>
 </body>
 </html>
