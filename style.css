@@ -1,76 +1,322 @@
+/* تعریف متغیرهای رنگی برای حس دنج و گرم (Cozy Palette) */
+:root {
+    --bg-color: #f7f3ed;          /* کرم خیلی روشن و گرم */
+    --card-bg: #ffffff;           /* سفید خالص برای کارت‌ها */
+    --primary-color: #8e6c58;     /* قهوه‌ای خاکی/کاکائویی ملایم */
+    --primary-light: #e6ded6;     /* کرم-خاکستری روشن */
+    --accent-color: #d4a373;      /* خردلی/تراکوتا گرم برای موارد برجسته */
+    --text-color: #4a3e3d;        /* قهوه‌ای تیره مات به جای مشکی مطلق */
+    --border-radius: 16px;
+    --transition: all 0.3s ease;
+}
+
+/* تنظیمات پایه */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    font-family: 'Vazirmatn', sans-serif;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4ebe1; /* کرم گرم و ملایم */
-    color: #4a3e3d; /* قهوه‌ای تیره مات */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
     padding: 20px;
-    direction: rtl;
-}
-
-.cozy-container {
-    width: 100%;
-    max-width: 450px;
-    animation: fadeIn 1.2s ease-in-out;
-}
-
-.card {
-    background: #ffffff;
-    padding: 40px 30px;
-    border-radius: 24px;
-    box-shadow: 0 10px 30px rgba(74, 62, 61, 0.05);
-    text-align: center;
-    border: 1px solid #eadecf;
-}
-
-h1 {
-    font-size: 1.8rem;
-    margin-bottom: 25px;
-    color: #8c6d58; /* قهوه‌ای خاکی ملایم */
-    font-weight: 600;
-}
-
-#quote-display {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    margin-bottom: 35px;
-    min-height: 80px;
     display: flex;
-    align-items: center;
     justify-content: center;
-    color: #5c4f4e;
+    min-height: 100vh;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 550px;
+    margin-top: 20px;
+}
+
+/* هدر و تاریخ */
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.date-header {
+    font-size: 0.95rem;
+    color: #8a7a71;
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+#greeting {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+/* کارت‌های دنج عمومی */
+.cozy-card {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 22px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 24px rgba(142, 108, 88, 0.04);
+    border: 1px solid rgba(142, 108, 88, 0.06);
+}
+
+/* بخش تب‌ها */
+.tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    background-color: #fcfbfa;
+    padding: 4px;
+    border-radius: 12px;
+    border: 1px solid var(--primary-light);
+}
+
+.tab-btn {
+    flex: 1;
+    background: none;
+    border: none;
+    font-size: 0.95rem;
+    color: #8a7a71;
+    cursor: pointer;
+    padding: 10px;
+    transition: var(--transition);
+    border-radius: 10px;
+    font-weight: 500;
+}
+
+.tab-btn.active {
+    color: var(--primary-color);
+    font-weight: 700;
+    background-color: var(--card-bg);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+}
+
+/* محتوای فرم تب‌ها */
+.tab-content {
+    display: none;
+    gap: 12px;
+    flex-direction: column;
+}
+
+.tab-content.active {
+    display: flex;
+}
+
+/* استایل ورودی‌ها و دکمه‌ها */
+input[type="text"], input[type="time"] {
+    width: 100%;
+    padding: 14px;
+    border: 2px solid var(--primary-light);
+    border-radius: 12px;
+    outline: none;
+    font-size: 1rem;
+    color: var(--text-color);
+    transition: var(--transition);
+    background-color: #faf9f6;
+}
+
+input:focus {
+    border-color: var(--accent-color);
+    background-color: #ffffff;
 }
 
 button {
-    background-color: #c8967e; /* سفالی ملایم */
+    background-color: var(--primary-color);
     color: white;
     border: none;
-    padding: 12px 28px;
-    font-size: 1rem;
-    border-radius: 50px;
+    padding: 14px 20px;
+    border-radius: 12px;
     cursor: pointer;
-    font-family: inherit;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(200, 150, 126, 0.2);
+    font-size: 1rem;
+    transition: var(--transition);
+    font-weight: 700;
+    width: 100%;
 }
 
 button:hover {
-    background-color: #b5836b;
-    transform: translateY(-2px);
+    background-color: #765643;
 }
 
-button:active {
-    transform: translateY(0);
+/* بخش لیست‌ها */
+.lists-section {
+    display: flex;
+    flex-direction: column;
 }
 
+.list-card h3 {
+    font-size: 1.15rem;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+}
+
+ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+li {
+    background: #faf9f6;
+    padding: 14px 16px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-right: 5px solid var(--accent-color);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+li.todo-item {
+    border-right-color: #bfa38f;
+}
+
+li.completed {
+    text-decoration: line-through;
+    opacity: 0.55;
+    border-right-color: #ccc;
+}
+
+.item-text {
+    font-size: 0.95rem;
+    cursor: pointer;
+    flex-grow: 1;
+}
+
+.delete-btn {
+    background: none;
+    color: #c97a7a;
+    padding: 0 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    width: auto;
+}
+
+.delete-btn:hover {
+    background: none;
+    color: #b25353;
+}
+
+/* بخش ساعت‌های بصری */
+.clock-subtitle {
+    font-size: 0.85rem;
+    color: #8a7a71;
+    margin-bottom: 20px;
+}
+
+.clocks-container {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.clock-wrapper {
+    text-align: center;
+    flex: 1;
+    min-width: 160px;
+}
+
+.clock-wrapper h4 {
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+    color: var(--primary-color);
+}
+
+.clock {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    border: 4px solid var(--primary-light);
+    background: #faf9f6;
+    margin: 0 auto;
+    position: relative;
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.03);
+}
+
+/* نقطه مرکزی ساعت */
+.clock::before {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+}
+
+/* گره‌های دایره‌ای ساعت برای هر زمان */
+.hour-node {
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--primary-light);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.75rem;
+    color: var(--text-color);
+    font-weight: 700;
+    transform: translate(-50%, -50%);
+    transition: var(--transition);
+}
+
+.hour-node.occupied {
+    background: var(--accent-color);
+    color: white;
+    box-shadow: 0 0 10px rgba(214, 163, 115, 0.4);
+}
+
+/* استایل پنجره پاپ‌آپ دریافت نام */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(74, 62, 61, 0.4);
+    backdrop-filter: blur(6px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: var(--card-bg);
+    padding: 35px;
+    border-radius: var(--border-radius);
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    max-width: 90%;
+    width: 420px;
+}
+
+.modal-content h2 {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+}
+
+.modal-content label {
+    display: block;
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+    color: #8a7a71;
+}
+
+.modal-content input {
+    margin-bottom: 20px;
+}
+
+/* انیمیشن لود شدن آیتم‌ها */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
