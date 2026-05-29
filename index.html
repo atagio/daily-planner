@@ -3,88 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>برنامه‌ریزی من</title>
+    <meta name="theme-color" content="#d4a574">
+    <meta name="description" content="برنامه‌ریزی شخصی دلنشین">
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#eaddcf">
+    <title>برنامه‌ریزی شخصی</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.0.0/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-    <div id="welcome-screen" class="welcome-container">
-        <div class="welcome-card">
-            <div class="welcome-icon">☕</div>
-            <h2>به فضای برنامه‌ریزی دنج خودت خوش اومدی</h2>
-            <p>اینجا یک محیط آرام برای تنظیم کارها و زمان‌بندی روزانته.</p>
-            <div class="input-group">
-                <label for="user-name-input">دوست داری چی صدات کنم؟</label>
-                <input type="text" id="user-name-input" placeholder="مثلاً محمد، سارا..." autofocus autocomplete="off">
-                <span id="name-error" class="error-text"></span>
-            </div>
-            <button id="save-name-btn">شروع کنیم ✨</button>
+    <!-- مودال خوش‌آمدگویی / دریافت نام -->
+    <div id="welcomeModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-icon">🌿</div>
+            <h2>سلام! به صفحه‌ی برنامه‌ریزی‌ات خوش اومدی</h2>
+            <p>لطفاً اسم قشنگت رو بنویس تا صفحه رو برات شخصی‌سازی کنم:</p>
+            <input type="text" id="nameInput" class="name-input" placeholder="اسمت رو اینجا بنویس..." autocomplete="off">
+            <button id="saveNameBtn" class="btn-primary">✨ بریم که صفحه رو ببینم</button>
+            <p class="modal-hint">اسمت رو دوست دارم بدونم تا بتونم صفحه رو برات خاص کنم 💛</p>
         </div>
     </div>
 
-    <div class="app-container" id="app-content" style="display: none;">
-        <header>
-            <div class="date-header" id="jalali-date">در حال بارگذاری تاریخ...</div>
-            <h1 id="greeting">صفحه‌ی برنامه‌ریزی ...</h1>
+    <!-- کانتینر اصلی -->
+    <div id="appContainer" class="app-container">
+        <!-- هدر با تقویم شمسی -->
+        <header class="app-header">
+            <div class="calendar-card">
+                <div class="calendar-day-name" id="weekdayName">شنبه</div>
+                <div class="calendar-main">
+                    <span class="calendar-day" id="jalaliDay">۱</span>
+                    <span class="calendar-month" id="jalaliMonth">فروردین</span>
+                    <span class="calendar-year" id="jalaliYear">۱۴۰۴</span>
+                </div>
+                <div class="calendar-date-detail">
+                    <span id="gregorianDate">۲۹ می ۲۰۲۶</span>
+                </div>
+            </div>
+            <div class="greeting-section">
+                <h1 class="greeting-text" id="greetingText">صفحه‌ی برنامه‌ریزی <span id="userNameDisplay">دوست من</span></h1>
+                <div class="poem-card" id="dailyPoem">
+                    <span class="poem-icon">📜</span>
+                    <p class="poem-text" id="poemText">در حال بارگذاری...</p>
+                </div>
+            </div>
         </header>
 
-        <main>
-            <div class="input-section cozy-card">
-                <div class="tabs">
-                    <button class="tab-btn active" data-target="todo-form">کار جدید (Todo)</button>
-                    <button class="tab-btn" data-target="schedule-form">برنامه زمانی (Schedule)</button>
-                </div>
+        <!-- تب‌ها -->
+        <nav class="tabs-nav">
+            <button class="tab-btn active" data-tab="todo">✅ لیست کارها</button>
+            <button class="tab-btn" data-tab="schedule">⏰ برنامه زمانی</button>
+        </nav>
 
-                <div id="todo-form" class="tab-content active">
-                    <input type="text" id="todo-input" placeholder="چه کاری باید انجام بدی؟">
-                    <button id="add-todo-btn">اضافه کن</button>
+        <!-- محتوای تب‌ها (هر دو لیست زیر هم) -->
+        <main class="content-area">
+            <!-- بخش تودو -->
+            <section class="list-section" id="todoSection">
+                <div class="section-header">
+                    <h2>📝 کارهایی که باید انجام بدم</h2>
+                    <span class="item-count" id="todoCount">۰ کار</span>
                 </div>
+                <div class="add-item-row">
+                    <input type="text" id="todoInput" class="item-input" placeholder="یه کار جدید بنویس..." autocomplete="off">
+                    <button id="addTodoBtn" class="btn-add">➕ افزودن</button>
+                </div>
+                <ul class="item-list" id="todoList"></ul>
+                <p class="empty-msg" id="todoEmpty">✨ هیچ کاری ثبت نشده. یه کار جدید اضافه کن!</p>
+            </section>
 
-                <div id="schedule-form" class="tab-content">
-                    <input type="text" id="schedule-input" placeholder="عنوان برنامه...">
-                    <div class="time-range-group">
-                        <div class="time-field">
-                            <label>از ساعت:</label>
-                            <input type="time" id="schedule-start-time" required>
-                        </div>
-                        <div class="time-field">
-                            <label>تا ساعت:</label>
-                            <input type="time" id="schedule-end-time" required>
-                        </div>
-                    </div>
-                    <button id="add-schedule-btn">ثبت زمان</button>
-                </div>
+            <!-- جداکننده -->
+            <div class="section-divider">
+                <span>✦</span>
             </div>
 
-            <div class="lists-section">
-                <div class="cozy-card list-card">
-                    <h3>لیست کارها (To-Do) 📝</h3>
-                    <ul id="todo-list"></ul>
+            <!-- بخش زمانبندی -->
+            <section class="list-section" id="scheduleSection">
+                <div class="section-header">
+                    <h2>🕐 برنامه‌های زمان‌بندی شده</h2>
+                    <span class="item-count" id="scheduleCount">۰ برنامه</span>
                 </div>
-
-                <div class="cozy-card list-card">
-                    <h3>زمان‌بندی امروز (Schedule) ⏱️</h3>
-                    <ul id="schedule-list"></ul>
+                <div class="add-item-row schedule-add-row">
+                    <input type="text" id="scheduleInput" class="item-input" placeholder="عنوان برنامه..." autocomplete="off">
+                    <select id="scheduleHour" class="hour-select">
+                        <option value="">ساعت</option>
+                        <option value="0">۱۲ ق.ظ</option>
+                        <option value="1">۱ ق.ظ</option>
+                        <option value="2">۲ ق.ظ</option>
+                        <option value="3">۳ ق.ظ</option>
+                        <option value="4">۴ ق.ظ</option>
+                        <option value="5">۵ ق.ظ</option>
+                        <option value="6">۶ ق.ظ</option>
+                        <option value="7">۷ ق.ظ</option>
+                        <option value="8">۸ ق.ظ</option>
+                        <option value="9">۹ ق.ظ</option>
+                        <option value="10">۱۰ ق.ظ</option>
+                        <option value="11">۱۱ ق.ظ</option>
+                        <option value="12">۱۲ ب.ظ</option>
+                        <option value="13">۱ ب.ظ</option>
+                        <option value="14">۲ ب.ظ</option>
+                        <option value="15">۳ ب.ظ</option>
+                        <option value="16">۴ ب.ظ</option>
+                        <option value="17">۵ ب.ظ</option>
+                        <option value="18">۶ ب.ظ</option>
+                        <option value="19">۷ ب.ظ</option>
+                        <option value="20">۸ ب.ظ</option>
+                        <option value="21">۹ ب.ظ</option>
+                        <option value="22">۱۰ ب.ظ</option>
+                        <option value="23">۱۱ ب.ظ</option>
+                    </select>
+                    <button id="addScheduleBtn" class="btn-add">➕ افزودن</button>
                 </div>
-            </div>
-
-            <div class="clocks-section cozy-card">
-                <h3>وضعیت زمانی امروز 🕰️</h3>
-                <p class="clock-subtitle">بخش‌های رنگی بازه‌های پر شده روی نمودار ساعت رو نشون میدن</p>
-                <div class="clocks-container">
-                    <div class="clock-wrapper">
-                        <h4>قبل از ظهر (AM)</h4>
-                        <div class="clock" id="am-clock"></div>
-                    </div>
-                    <div class="clock-wrapper">
-                        <h4>بعد از ظهر (PM)</h4>
-                        <div class="clock" id="pm-clock"></div>
-                    </div>
-                </div>
-            </div>
+                <ul class="item-list" id="scheduleList"></ul>
+                <p class="empty-msg" id="scheduleEmpty">🕊️ هنوز برنامه‌ی زمان‌بندی شده‌ای نداری.</p>
+            </section>
         </main>
+
+        <!-- دو ساعت ۱۲ ساعته -->
+        <section class="clocks-section">
+            <h2 class="clocks-title">🕰️ ساعت‌های روز</h2>
+            <div class="clocks-container">
+                <!-- ساعت قبل از ظهر -->
+                <div class="clock-wrapper">
+                    <h3 class="clock-label">🌅 قبل از ظهر</h3>
+                    <div class="clock-face" id="clockAM">
+                        <div class="clock-center"></div>
+                    </div>
+                </div>
+                <!-- ساعت بعد از ظهر -->
+                <div class="clock-wrapper">
+                    <h3 class="clock-label">🌙 بعد از ظهر</h3>
+                    <div class="clock-face" id="clockPM">
+                        <div class="clock-center"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- فوتر -->
+        <footer class="app-footer">
+            <p>🍂 ساخته شده با عشق برای <span id="footerName">تو</span> | <span id="footerDate"></span></p>
+        </footer>
     </div>
 
     <script src="app.js"></script>
