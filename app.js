@@ -391,6 +391,59 @@ function switchPage(pageId) {
     if (btn) btn.classList.add('active');
 }
 
+// ==================== بخش نوتیفیکیشن ====================
+let notificationsEnabled = false;
+const notifiedToday = new Set();
+
+function requestNotificationPermission() {
+    if (!('Notification' in window)) {
+        return;
+    }
+    if (Notification.permission === 'granted') {
+        notificationsEnabled = true;
+    } else if (Notification.permission === 'default') {
+        Notification.requestPermission().then(perm => {
+            notificationsEnabled = (perm === 'granted');
+        });
+    }
+}
+
+function resetNotificationsIfNewDay() {
+    const today = new Date().toDateString();
+    const lastReset = localStorage.getItem('planner_notify_reset');
+    if (lastReset !== today) {
+        notifiedToday.clear();
+        localStorage.setItem('planner_notify_reset', today);
+    }
+}
+
+function checkScheduleNotifications() {
+    if (!notificationsEnabled) return;
+    resetNotificationsIfNewDay();
+
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+
+    schedules.forEach((sch, index) => {
+        if (sch.startH === currentHour && sch.startM === currentMinute) {
+            const key = `schedule-${index}`;
+            if (!notifiedToday.has(key)) {
+                const bodyMsg = `⏰ ${sch.text} از ${formatTime12(sch.startH, sch.startM)} تا ${formatTime12(sch.endH, sch.endM)}`;
+                if (Notification.permission === 'granted') {
+                    new Notification('برنامه‌ریز شخصی', {
+                        body: bodyMsg,
+                        icon: 'icon-192.png',
+                        tag: key,
+                        requireInteraction: true,
+                    });
+                }
+                notifiedToday.add(key);
+            }
+        }
+    });
+}
+
 // ---------- رویدادها ----------
 function setupEvents() {
     document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
@@ -416,7 +469,6 @@ function setupEvents() {
         if (e.key === 'Enter') document.getElementById('saveNameBtn').click();
     });
 
-    // افزودن کار
     document.getElementById('addTodoBtn').addEventListener('click', () => {
         const input = document.getElementById('todoInput');
         const text = input.value.trim();
@@ -430,7 +482,6 @@ function setupEvents() {
         if (e.key === 'Enter') document.getElementById('addTodoBtn').click();
     });
 
-    // رویدادهای لیست کارها (تغییر وضعیت و حذف)
     document.getElementById('todoList').addEventListener('click', e => {
         const index = e.target.dataset.index;
         if (index === undefined) return;
@@ -446,7 +497,6 @@ function setupEvents() {
         }
     });
 
-    // افزودن برنامه زمانبندی
     document.getElementById('addScheduleBtn').addEventListener('click', () => {
         const textInput = document.getElementById('scheduleInput');
         const startInput = document.getElementById('scheduleStart');
@@ -474,7 +524,6 @@ function setupEvents() {
         }
     });
 
-    // جزیره ناوبری
     document.querySelectorAll('.island-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             const page = btn.dataset.page;
@@ -482,16 +531,16 @@ function setupEvents() {
         });
     });
 
-    // کرونومتر
     document.getElementById('stopwatchStartBtn').addEventListener('click', startStopwatch);
     document.getElementById('stopwatchPauseBtn').addEventListener('click', pauseStopwatch);
     document.getElementById('stopwatchResetBtn').addEventListener('click', resetStopwatch);
     document.getElementById('stopwatchLapBtn').addEventListener('click', lapStopwatch);
 
-    // پومودورو
     document.getElementById('pomodoroStartBtn').addEventListener('click', startPomodoro);
     document.getElementById('pomodoroPauseBtn').addEventListener('click', pausePomodoro);
     document.getElementById('pomodoroResetBtn').addEventListener('click', resetPomodoro);
+
+    requestNotificationPermission();
 }
 
 function updateUIWithName() {
@@ -533,8 +582,12 @@ function init() {
     renderClocks();
     setupEvents();
 
+    setInterval(checkScheduleNotifications, 15000);
     setInterval(renderClocks, 60000);
-    if ('serviceWorker' in navigator) navigator.serviceWorker.register('service-worker.js');
+
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('service-worker.js');
+    }
 }
 
 document.addEventListener('DOMContentLoaded', init);
