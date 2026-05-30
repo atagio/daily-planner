@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- مودال خوش‌آمدگویی (بدون کلاس hidden) -->
     <div id="welcomeModal" class="modal-overlay" style="display: flex;">
         <div class="modal-card">
             <div class="modal-icon">🌿</div>
@@ -24,9 +23,7 @@
         </div>
     </div>
 
-    <!-- کانتینر اصلی -->
     <div id="appContainer" class="app-container">
-        <!-- هدر با تقویم شمسی و دکمه دارک مود -->
         <header class="app-header">
             <div class="header-top-row">
                 <button id="darkModeToggle" class="dark-mode-btn" aria-label="تغییر تم">🌙</button>
@@ -51,9 +48,7 @@
             </div>
         </header>
 
-        <!-- محتوای صفحات -->
         <div class="pages-container">
-            <!-- صفحه برنامه‌ریز -->
             <section class="page active" id="plannerPage">
                 <div class="list-section">
                     <div class="section-header">
@@ -106,7 +101,6 @@
                 </div>
             </section>
 
-            <!-- صفحه کرونومتر -->
             <section class="page" id="stopwatchPage">
                 <div class="stopwatch-card">
                     <h2>⏱️ کرونومتر</h2>
@@ -121,21 +115,20 @@
                 </div>
             </section>
 
-            <!-- صفحه پومودورو -->
             <section class="page" id="pomodoroPage">
                 <div class="pomodoro-card">
                     <h2>🍅 پومودورو</h2>
                     <div class="pomodoro-settings">
                         <div class="setting-row">
-                            <label>دقیقه کار:</label>
+                            <label for="workMinutes">دقیقه کار:</label>
                             <input type="number" id="workMinutes" class="setting-input" value="25" min="1" max="99">
                         </div>
                         <div class="setting-row">
-                            <label>دقیقه استراحت:</label>
+                            <label for="breakMinutes">دقیقه استراحت:</label>
                             <input type="number" id="breakMinutes" class="setting-input" value="5" min="1" max="99">
                         </div>
                         <div class="setting-row">
-                            <label>تعداد پارت‌های کار:</label>
+                            <label for="workParts">تعداد پارت‌های کار:</label>
                             <input type="number" id="workParts" class="setting-input" value="4" min="1" max="20">
                         </div>
                     </div>
@@ -155,7 +148,6 @@
             </section>
         </div>
 
-        <!-- جزیره‌ی پایین -->
         <nav class="bottom-island">
             <button class="island-btn active" data-page="plannerPage">📋 برنامه‌ریز</button>
             <button class="island-btn" data-page="stopwatchPage">⏱️ کرونومتر</button>
