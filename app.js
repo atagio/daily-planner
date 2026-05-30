@@ -1,5 +1,4 @@
-// ===== app.js (با رفع مشکل نمایش شعر و تقویم پس از ورود نام) =====
-
+// ===== app.js =====
 // ---------- اشعار ۳۰ روزه ----------
 const poems = [
     'یوسف گمگشته بازآید به کنعان غم مخور / کلبه احزان شود روزی گلستان غم مخور. (حافظ)',
@@ -97,7 +96,7 @@ function toggleDarkMode() {
     applyDarkMode(isDark);
 }
 
-// ---------- مدیریت مودال (فقط با style.display) ----------
+// ---------- مدیریت مودال ----------
 function showWelcomeModal() {
     document.getElementById('welcomeModal').style.display = 'flex';
 }
@@ -106,48 +105,393 @@ function hideWelcomeModal() {
 }
 
 // ---------- رندر برنامه‌ریز ----------
-function renderTodos() { /* کد بدون تغییر، دقیقاً مثل قبل */ }
-function renderSchedules() { /* کد بدون تغییر */ }
-function renderClocks() { /* کد بدون تغییر */ }
-function drawClockCanvas(canvasId, rangeStart, rangeEnd) { /* کد بدون تغییر */ }
+function renderTodos() {
+    const list = document.getElementById('todoList');
+    const count = document.getElementById('todoCount');
+    const emptyMsg = document.getElementById('todoEmpty');
+    list.innerHTML = '';
+    if (todos.length === 0) {
+        emptyMsg.style.display = 'block';
+        count.textContent = '۰ کار';
+        return;
+    }
+    emptyMsg.style.display = 'none';
+    count.textContent = todos.length + ' کار';
+    todos.forEach((todo, index) => {
+        const li = document.createElement('li');
+        li.className = 'item' + (todo.done ? ' done' : '');
+        li.innerHTML = `
+            <span class="item-text">${todo.text}</span>
+            <div class="item-actions">
+                <button class="btn-done" data-index="${index}">${todo.done ? '↩' : '✔'}</button>
+                <button class="btn-delete" data-index="${index}">🗑</button>
+            </div>
+        `;
+        list.appendChild(li);
+    });
+}
+
+function renderSchedules() {
+    const list = document.getElementById('scheduleList');
+    const count = document.getElementById('scheduleCount');
+    const emptyMsg = document.getElementById('scheduleEmpty');
+    list.innerHTML = '';
+    if (schedules.length === 0) {
+        emptyMsg.style.display = 'block';
+        count.textContent = '۰ برنامه';
+        return;
+    }
+    emptyMsg.style.display = 'none';
+    count.textContent = schedules.length + ' برنامه';
+    schedules.forEach((sch, index) => {
+        const li = document.createElement('li');
+        li.className = 'item';
+        li.innerHTML = `
+            <span class="item-text">${sch.text}</span>
+            <span class="item-time">${formatTimeRange(sch.startH, sch.startM, sch.endH, sch.endM)}</span>
+            <div class="item-actions">
+                <button class="btn-delete" data-index="${index}">🗑</button>
+            </div>
+        `;
+        list.appendChild(li);
+    });
+}
+
+function drawClockCanvas(canvasId, rangeStart, rangeEnd) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width, h = canvas.height;
+    const cx = w / 2, cy = h / 2, r = Math.min(cx, cy) - 2;
+    ctx.clearRect(0, 0, w, h);
+    const now = new Date();
+    const h24 = now.getHours();
+    const minutes = now.getMinutes();
+    const seconds = now.getSeconds();
+    const isActive = (h24 >= rangeStart && h24 < rangeEnd);
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, 2 * Math.PI);
+    ctx.strokeStyle = '#d4a574';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.fillStyle = isActive ? '#fdf6ec' : '#f0e1d2';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, 2 * Math.PI);
+    ctx.strokeStyle = '#8b5e3c';
+    ctx.stroke();
+    for (let i = 0; i < 12; i++) {
+        const angle = (i - 3) * Math.PI / 6;
+        const outer = r - 5;
+        const inner = r - 12;
+        const x1 = cx + inner * Math.cos(angle);
+        const y1 = cy + inner * Math.sin(angle);
+        const x2 = cx + outer * Math.cos(angle);
+        const y2 = cy + outer * Math.sin(angle);
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.strokeStyle = '#5c3a21';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+    const totalMinutes = minutes + seconds / 60;
+    let hourAngle = (h24 % 12 + totalMinutes / 60) * 30;
+    hourAngle = (hourAngle - 90) * Math.PI / 180;
+    const minAngle = (totalMinutes * 6 - 90) * Math.PI / 180;
+    const secAngle = (seconds * 6 - 90) * Math.PI / 180;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + r * 0.5 * Math.cos(hourAngle), cy + r * 0.5 * Math.sin(hourAngle));
+    ctx.strokeStyle = '#3a2517';
+    ctx.lineWidth = 4;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + r * 0.7 * Math.cos(minAngle), cy + r * 0.7 * Math.sin(minAngle));
+    ctx.strokeStyle = '#6b4c3b';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + r * 0.8 * Math.cos(secAngle), cy + r * 0.8 * Math.sin(secAngle));
+    ctx.strokeStyle = '#c96b4f';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(cx, cy, 3, 0, 2 * Math.PI);
+    ctx.fillStyle = '#3a2517';
+    ctx.fill();
+}
+
+function renderClocks() {
+    drawClockCanvas('clockAMCanvas', 0, 12);
+    drawClockCanvas('clockPMCanvas', 12, 24);
+}
 
 // ---------- کرونومتر ----------
-// ... (همان توابع)
+let stopwatchInterval = null;
+let stopwatchMillis = 0;
+let stopwatchRunning = false;
+
+function formatStopwatch(ms) {
+    const sec = Math.floor(ms / 1000) % 60;
+    const min = Math.floor(ms / 60000) % 60;
+    const hr = Math.floor(ms / 3600000);
+    return `${hr.toString().padStart(2, '0')}:${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+}
+
+function updateStopwatchDisplay() {
+    document.getElementById('stopwatchDisplay').textContent = formatStopwatch(stopwatchMillis);
+}
+
+let laps = [];
+
+function startStopwatch() {
+    if (stopwatchRunning) return;
+    stopwatchRunning = true;
+    stopwatchInterval = setInterval(() => {
+        stopwatchMillis += 100;
+        updateStopwatchDisplay();
+    }, 100);
+    document.getElementById('stopwatchStartBtn').disabled = true;
+    document.getElementById('stopwatchPauseBtn').disabled = false;
+    document.getElementById('stopwatchLapBtn').disabled = false;
+}
+
+function pauseStopwatch() {
+    if (!stopwatchRunning) return;
+    clearInterval(stopwatchInterval);
+    stopwatchRunning = false;
+    document.getElementById('stopwatchStartBtn').disabled = false;
+    document.getElementById('stopwatchPauseBtn').disabled = true;
+    document.getElementById('stopwatchLapBtn').disabled = true;
+}
+
+function resetStopwatch() {
+    pauseStopwatch();
+    stopwatchMillis = 0;
+    laps = [];
+    updateStopwatchDisplay();
+    renderLaps();
+}
+
+function lapStopwatch() {
+    if (!stopwatchRunning) return;
+    laps.push(stopwatchMillis);
+    renderLaps();
+}
+
+function renderLaps() {
+    const lapList = document.getElementById('lapList');
+    lapList.innerHTML = '';
+    laps.forEach((ms, i) => {
+        const li = document.createElement('li');
+        li.textContent = `دور ${i + 1}: ${formatStopwatch(ms)}`;
+        lapList.appendChild(li);
+    });
+}
+
 // ---------- پومودورو ----------
-// ... (همان توابع)
+let pomodoroInterval = null;
+let pomodoroSeconds = 0;
+let pomodoroPhase = 'work';
+let pomodoroRunning = false;
+let workParts = 4;
+let workMinutes = 25;
+let breakMinutes = 5;
+let currentPart = 0;
+
+function readPomodoroSettings() {
+    workMinutes = parseInt(document.getElementById('workMinutes').value) || 25;
+    breakMinutes = parseInt(document.getElementById('breakMinutes').value) || 5;
+    workParts = parseInt(document.getElementById('workParts').value) || 4;
+}
+
+function updatePomodoroDisplay() {
+    const min = Math.floor(pomodoroSeconds / 60);
+    const sec = pomodoroSeconds % 60;
+    document.getElementById('pomodoroTimer').textContent = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+}
+
+function updatePomodoroProgress() {
+    document.getElementById('pomodoroProgress').textContent = `پارت ${currentPart} از ${workParts}`;
+}
+
+function setPomodoroPhase(phase) {
+    pomodoroPhase = phase;
+    document.getElementById('pomodoroPhase').textContent = phase === 'work' ? 'کار' : 'استراحت';
+    if (phase === 'work') {
+        pomodoroSeconds = workMinutes * 60;
+    } else {
+        pomodoroSeconds = breakMinutes * 60;
+    }
+    updatePomodoroDisplay();
+}
+
+function startPomodoro() {
+    if (pomodoroRunning) return;
+    readPomodoroSettings();
+    if (!pomodoroPhase || (pomodoroPhase !== 'work' && pomodoroPhase !== 'break')) {
+        currentPart = 0;
+        setPomodoroPhase('work');
+    }
+    pomodoroRunning = true;
+    document.getElementById('pomodoroStartBtn').disabled = true;
+    document.getElementById('pomodoroPauseBtn').disabled = false;
+    pomodoroInterval = setInterval(() => {
+        if (pomodoroSeconds <= 0) {
+            if (pomodoroPhase === 'work') {
+                currentPart++;
+                updatePomodoroProgress();
+                if (currentPart >= workParts) {
+                    clearInterval(pomodoroInterval);
+                    pomodoroRunning = false;
+                    document.getElementById('pomodoroStartBtn').disabled = false;
+                    document.getElementById('pomodoroPauseBtn').disabled = true;
+                    setPomodoroPhase('break');
+                    currentPart = 0;
+                    updatePomodoroProgress();
+                    return;
+                }
+                setPomodoroPhase('break');
+            } else {
+                setPomodoroPhase('work');
+            }
+        }
+        pomodoroSeconds--;
+        updatePomodoroDisplay();
+    }, 1000);
+}
+
+function pausePomodoro() {
+    if (!pomodoroRunning) return;
+    clearInterval(pomodoroInterval);
+    pomodoroRunning = false;
+    document.getElementById('pomodoroStartBtn').disabled = false;
+    document.getElementById('pomodoroPauseBtn').disabled = true;
+}
+
+function resetPomodoro() {
+    clearInterval(pomodoroInterval);
+    pomodoroRunning = false;
+    currentPart = 0;
+    setPomodoroPhase('work');
+    updatePomodoroProgress();
+    document.getElementById('pomodoroStartBtn').disabled = false;
+    document.getElementById('pomodoroPauseBtn').disabled = true;
+}
 
 // ---------- ناوبری ----------
-function switchPage(pageId) { /* کد بدون تغییر */ }
+function switchPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+    document.querySelectorAll('.island-btn').forEach(b => b.classList.remove('active'));
+    const btn = document.querySelector(`.island-btn[data-page="${pageId}"]`);
+    if (btn) btn.classList.add('active');
+}
 
 // ---------- رویدادها ----------
 function setupEvents() {
-    // جزیره و دارک مود و تودو و زمانبندی و کرونومتر و پومودورو مثل قبل...
-
-    // مودال نام (اصلاح نهایی)
+    document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
     document.getElementById('saveNameBtn').addEventListener('click', () => {
         const nameInput = document.getElementById('nameInput');
         const name = nameInput.value.trim();
         const errorEl = document.getElementById('nameError');
-
         if (!name) {
             errorEl.textContent = 'لطفاً یک اسم وارد کن 🌱';
             nameInput.focus();
             return;
         }
-
         errorEl.textContent = '';
         userName = name;
         localStorage.setItem('planner_userName', name);
         hideWelcomeModal();
         updateUIWithName();
-        // حالا که اسم ذخیره شد، تقویم و شعر را به‌روز کن
         updateCalendarAndPoem();
-        renderClocks(); // یک بار هم ساعت‌ها را رسم کن
+        renderClocks();
     });
 
     document.getElementById('nameInput').addEventListener('keypress', e => {
         if (e.key === 'Enter') document.getElementById('saveNameBtn').click();
     });
+
+    // افزودن کار
+    document.getElementById('addTodoBtn').addEventListener('click', () => {
+        const input = document.getElementById('todoInput');
+        const text = input.value.trim();
+        if (!text) return;
+        todos.push({ text, done: false });
+        saveTodos();
+        input.value = '';
+        renderTodos();
+    });
+    document.getElementById('todoInput').addEventListener('keypress', e => {
+        if (e.key === 'Enter') document.getElementById('addTodoBtn').click();
+    });
+
+    // رویدادهای لیست کارها (تغییر وضعیت و حذف)
+    document.getElementById('todoList').addEventListener('click', e => {
+        const index = e.target.dataset.index;
+        if (index === undefined) return;
+        const idx = parseInt(index);
+        if (e.target.classList.contains('btn-done')) {
+            todos[idx].done = !todos[idx].done;
+            saveTodos();
+            renderTodos();
+        } else if (e.target.classList.contains('btn-delete')) {
+            todos.splice(idx, 1);
+            saveTodos();
+            renderTodos();
+        }
+    });
+
+    // افزودن برنامه زمانبندی
+    document.getElementById('addScheduleBtn').addEventListener('click', () => {
+        const textInput = document.getElementById('scheduleInput');
+        const startInput = document.getElementById('scheduleStart');
+        const endInput = document.getElementById('scheduleEnd');
+        const text = textInput.value.trim();
+        const startVal = startInput.value;
+        const endVal = endInput.value;
+        if (!text || !startVal || !endVal) return;
+        const [sh, sm] = startVal.split(':').map(Number);
+        const [eh, em] = endVal.split(':').map(Number);
+        schedules.push({ text, startH: sh, startM: sm, endH: eh, endM: em });
+        saveSchedules();
+        textInput.value = '';
+        startInput.value = '';
+        endInput.value = '';
+        renderSchedules();
+    });
+
+    document.getElementById('scheduleList').addEventListener('click', e => {
+        if (e.target.classList.contains('btn-delete')) {
+            const index = parseInt(e.target.dataset.index);
+            schedules.splice(index, 1);
+            saveSchedules();
+            renderSchedules();
+        }
+    });
+
+    // جزیره ناوبری
+    document.querySelectorAll('.island-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const page = btn.dataset.page;
+            switchPage(page);
+        });
+    });
+
+    // کرونومتر
+    document.getElementById('stopwatchStartBtn').addEventListener('click', startStopwatch);
+    document.getElementById('stopwatchPauseBtn').addEventListener('click', pauseStopwatch);
+    document.getElementById('stopwatchResetBtn').addEventListener('click', resetStopwatch);
+    document.getElementById('stopwatchLapBtn').addEventListener('click', lapStopwatch);
+
+    // پومودورو
+    document.getElementById('pomodoroStartBtn').addEventListener('click', startPomodoro);
+    document.getElementById('pomodoroPauseBtn').addEventListener('click', pausePomodoro);
+    document.getElementById('pomodoroResetBtn').addEventListener('click', resetPomodoro);
 }
 
 function updateUIWithName() {
