@@ -2,7 +2,7 @@
   "name": "برنامه‌ریز شخصی",
   "short_name": "برنامه‌ریز",
   "description": "یک PWA برنامه‌ریزی شخصی دلنشین",
-  "start_url": ".",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#fdf6ee",
   "theme_color": "#d4a574",
