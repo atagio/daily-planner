@@ -1,4 +1,4 @@
-/* ===== style.css (نسخه کامل و اصلاح‌شده) ===== */
+/* ===== style.css ===== */
 :root {
     --bg: #fdf6ee;
     --card-bg: #fffaf4;
@@ -58,15 +58,13 @@ body {
     inset: 0;
     background: rgba(40, 20, 10, 0.7);
     backdrop-filter: blur(6px);
-    display: flex;          /* پیش‌فرض نمایش */
+    display: flex;
     align-items: center;
     justify-content: center;
     z-index: 1000;
     padding: 20px;
     animation: fadeIn 0.4s ease;
 }
-
-/* کلاس hidden اصلاً وجود ندارد – مودال فقط با style.display کنترل می‌شود */
 
 .modal-card {
     background: var(--card-bg);
