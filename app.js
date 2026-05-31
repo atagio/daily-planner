@@ -1,4 +1,4 @@
-// ===== app.js =====
+// ===== app.js (نسخه تستی با alert) =====
 // ---------- اشعار ۳۰ روزه ----------
 const poems = [
     'یوسف گمگشته بازآید به کنعان غم مخور / کلبه احزان شود روزی گلستان غم مخور. (حافظ)',
@@ -157,7 +157,7 @@ function renderSchedules() {
     });
 }
 
-// ---------- ساعت‌های نموداری (فقط نمایش اشغال، بدون عقربه) ----------
+// ---------- ساعت‌های نموداری (فقط نمایش اشغال) ----------
 function getOccupiedHours() {
     const occupiedAM = new Set();
     const occupiedPM = new Set();
@@ -444,28 +444,38 @@ function checkScheduleNotifications() {
     });
 }
 
-// ---------- رویدادها ----------
+// ---------- رویدادها (با alert تستی) ----------
 function setupEvents() {
     document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
 
-    // مودال خوش‌آمدگویی
-    document.getElementById('saveNameBtn').addEventListener('click', () => {
-        const nameInput = document.getElementById('nameInput');
-        const name = nameInput.value.trim();
-        const errorEl = document.getElementById('nameError');
-        if (!name) {
-            errorEl.textContent = 'لطفاً یک اسم وارد کن 🌱';
-            nameInput.focus();
-            return;
-        }
-        errorEl.textContent = '';
-        userName = name;
-        localStorage.setItem('planner_userName', name);
-        hideWelcomeModal();
-        updateUIWithName();
-        updateCalendarAndPoem();
-        renderClocks();
-    });
+    // مودال خوش‌آمدگویی با alert
+    const saveBtn = document.getElementById('saveNameBtn');
+    if (saveBtn) {
+        saveBtn.addEventListener('click', () => {
+            alert('کلیک ثبت شد');
+            const nameInput = document.getElementById('nameInput');
+            const name = nameInput.value.trim();
+            const errorEl = document.getElementById('nameError');
+            if (!name) {
+                errorEl.textContent = 'لطفاً یک اسم وارد کن 🌱';
+                nameInput.focus();
+                return;
+            }
+            errorEl.textContent = '';
+            try {
+                userName = name;
+                localStorage.setItem('planner_userName', name);
+                hideWelcomeModal();
+                updateUIWithName();
+                updateCalendarAndPoem();
+                renderClocks();
+            } catch (e) {
+                alert('خطا: ' + e.message);
+            }
+        });
+    } else {
+        alert('دکمه ذخیره پیدا نشد!');
+    }
 
     document.getElementById('nameInput').addEventListener('keypress', e => {
         if (e.key === 'Enter') document.getElementById('saveNameBtn').click();
@@ -508,4 +518,92 @@ function setupEvents() {
         const endVal = endInput.value;
         if (!text || !startVal || !endVal) return;
         const [sh, sm] = startVal.split(':').map(Number);
-        const [eh, e
+        const [eh, em] = endVal.split(':').map(Number);
+        schedules.push({ text, startH: sh, startM: sm, endH: eh, endM: em });
+        saveSchedules();
+        textInput.value = '';
+        startInput.value = '';
+        endInput.value = '';
+        renderSchedules();
+        renderClocks();
+    });
+
+    document.getElementById('scheduleList').addEventListener('click', e => {
+        if (e.target.classList.contains('btn-delete')) {
+            const index = parseInt(e.target.dataset.index);
+            schedules.splice(index, 1);
+            saveSchedules();
+            renderSchedules();
+            renderClocks();
+        }
+    });
+
+    document.querySelectorAll('.island-btn').forEach(btn => {
+        btn.addEventListener('click', () => switchPage(btn.dataset.page));
+    });
+
+    document.getElementById('stopwatchStartBtn').addEventListener('click', startStopwatch);
+    document.getElementById('stopwatchPauseBtn').addEventListener('click', pauseStopwatch);
+    document.getElementById('stopwatchResetBtn').addEventListener('click', resetStopwatch);
+    document.getElementById('stopwatchLapBtn').addEventListener('click', lapStopwatch);
+
+    document.getElementById('pomodoroStartBtn').addEventListener('click', startPomodoro);
+    document.getElementById('pomodoroPauseBtn').addEventListener('click', pausePomodoro);
+    document.getElementById('pomodoroResetBtn').addEventListener('click', resetPomodoro);
+
+    requestNotificationPermission();
+}
+
+function updateUIWithName() {
+    document.getElementById('userNameDisplay').textContent = userName;
+    document.getElementById('footerName').textContent = userName;
+}
+
+// ---------- تقویم و شعر ----------
+function updateCalendarAndPoem() {
+    const [jy, jm, jd] = getTodayJalali();
+    const wd = getJalaliWeekday(jy, jm, jd);
+    document.getElementById('weekdayName').textContent = jalaliWeekdays[wd];
+    document.getElementById('jalaliDay').textContent = jd.toLocaleString('fa-IR');
+    document.getElementById('jalaliMonth').textContent = jalaliMonthNames[jm - 1];
+    document.getElementById('jalaliYear').textContent = jy.toLocaleString('fa-IR');
+    const now = new Date();
+    const gm = ['ژانویه','فوریه','مارس','آوریل','می','ژوئن','جولای','اوت','سپتامبر','اکتبر','نوامبر','دسامبر'];
+    document.getElementById('gregorianDate').textContent = now.getDate() + ' ' + gm[now.getMonth()] + ' ' + now.getFullYear();
+    const doy = getDayOfYearJalali(jy, jm, jd);
+    document.getElementById('poemText').textContent = poems[(doy - 1) % poems.length];
+    document.getElementById('footerDate').textContent = jalaliWeekdays[wd] + '، ' + jd + ' ' + jalaliMonthNames[jm - 1] + ' ' + jy;
+}
+
+// ---------- راه‌اندازی ----------
+function init() {
+    const savedDark = localStorage.getItem('planner_darkMode') === 'true';
+    applyDarkMode(savedDark);
+
+    if (userName) {
+        hideWelcomeModal();
+        updateUIWithName();
+    } else {
+        showWelcomeModal();
+    }
+
+    setupEvents();
+
+    try {
+        updateCalendarAndPoem();
+        renderTodos();
+        renderSchedules();
+        renderClocks();
+    } catch (error) {
+        alert('خطا در شروع: ' + error.message);
+    }
+
+    setInterval(checkScheduleNotifications, 15000);
+    setInterval(renderClocks, 60000);
+
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('service-worker.js');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', init);
