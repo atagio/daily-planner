@@ -96,14 +96,12 @@ function toggleDarkMode() {
     applyDarkMode(isDark);
 }
 
-// ---------- مدیریت مودال (با لاگ برای خطایابی) ----------
+// ---------- مدیریت مودال ----------
 function showWelcomeModal() {
     document.getElementById('welcomeModal').style.display = 'flex';
-    console.log('مودال نمایش داده شد');
 }
 function hideWelcomeModal() {
     document.getElementById('welcomeModal').style.display = 'none';
-    console.log('مودال مخفی شد');
 }
 
 // ---------- رندر برنامه‌ریز ----------
@@ -450,16 +448,14 @@ function checkScheduleNotifications() {
 function setupEvents() {
     document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
 
-    // مودال خوش‌آمدگویی - با لاگ برای دیباگ
+    // مودال خوش‌آمدگویی
     document.getElementById('saveNameBtn').addEventListener('click', () => {
-        console.log('دکمه زده شد');
         const nameInput = document.getElementById('nameInput');
         const name = nameInput.value.trim();
         const errorEl = document.getElementById('nameError');
         if (!name) {
             errorEl.textContent = 'لطفاً یک اسم وارد کن 🌱';
             nameInput.focus();
-            console.log('اسم خالی بود');
             return;
         }
         errorEl.textContent = '';
@@ -469,7 +465,6 @@ function setupEvents() {
         updateUIWithName();
         updateCalendarAndPoem();
         renderClocks();
-        console.log('اسم ذخیره شد:', name);
     });
 
     document.getElementById('nameInput').addEventListener('keypress', e => {
@@ -513,87 +508,4 @@ function setupEvents() {
         const endVal = endInput.value;
         if (!text || !startVal || !endVal) return;
         const [sh, sm] = startVal.split(':').map(Number);
-        const [eh, em] = endVal.split(':').map(Number);
-        schedules.push({ text, startH: sh, startM: sm, endH: eh, endM: em });
-        saveSchedules();
-        textInput.value = '';
-        startInput.value = '';
-        endInput.value = '';
-        renderSchedules();
-        renderClocks();
-    });
-
-    document.getElementById('scheduleList').addEventListener('click', e => {
-        if (e.target.classList.contains('btn-delete')) {
-            const index = parseInt(e.target.dataset.index);
-            schedules.splice(index, 1);
-            saveSchedules();
-            renderSchedules();
-            renderClocks();
-        }
-    });
-
-    document.querySelectorAll('.island-btn').forEach(btn => {
-        btn.addEventListener('click', () => switchPage(btn.dataset.page));
-    });
-
-    document.getElementById('stopwatchStartBtn').addEventListener('click', startStopwatch);
-    document.getElementById('stopwatchPauseBtn').addEventListener('click', pauseStopwatch);
-    document.getElementById('stopwatchResetBtn').addEventListener('click', resetStopwatch);
-    document.getElementById('stopwatchLapBtn').addEventListener('click', lapStopwatch);
-
-    document.getElementById('pomodoroStartBtn').addEventListener('click', startPomodoro);
-    document.getElementById('pomodoroPauseBtn').addEventListener('click', pausePomodoro);
-    document.getElementById('pomodoroResetBtn').addEventListener('click', resetPomodoro);
-
-    requestNotificationPermission();
-}
-
-function updateUIWithName() {
-    document.getElementById('userNameDisplay').textContent = userName;
-    document.getElementById('footerName').textContent = userName;
-}
-
-// ---------- تقویم و شعر ----------
-function updateCalendarAndPoem() {
-    const [jy, jm, jd] = getTodayJalali();
-    const wd = getJalaliWeekday(jy, jm, jd);
-    document.getElementById('weekdayName').textContent = jalaliWeekdays[wd];
-    document.getElementById('jalaliDay').textContent = jd.toLocaleString('fa-IR');
-    document.getElementById('jalaliMonth').textContent = jalaliMonthNames[jm - 1];
-    document.getElementById('jalaliYear').textContent = jy.toLocaleString('fa-IR');
-    const now = new Date();
-    const gm = ['ژانویه','فوریه','مارس','آوریل','می','ژوئن','جولای','اوت','سپتامبر','اکتبر','نوامبر','دسامبر'];
-    document.getElementById('gregorianDate').textContent = now.getDate() + ' ' + gm[now.getMonth()] + ' ' + now.getFullYear();
-    const doy = getDayOfYearJalali(jy, jm, jd);
-    document.getElementById('poemText').textContent = poems[(doy - 1) % poems.length];
-    document.getElementById('footerDate').textContent = jalaliWeekdays[wd] + '، ' + jd + ' ' + jalaliMonthNames[jm - 1] + ' ' + jy;
-}
-
-// ---------- راه‌اندازی ----------
-function init() {
-    const savedDark = localStorage.getItem('planner_darkMode') === 'true';
-    applyDarkMode(savedDark);
-
-    if (userName) {
-        hideWelcomeModal();
-        updateUIWithName();
-    } else {
-        showWelcomeModal();
-    }
-
-    updateCalendarAndPoem();
-    renderTodos();
-    renderSchedules();
-    renderClocks();
-    setupEvents();
-
-    setInterval(checkScheduleNotifications, 15000);
-    setInterval(renderClocks, 60000);
-
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('service-worker.js');
-    }
-}
-
-document.addEventListener('DOMContentLoaded', init);
+        const [eh, e
