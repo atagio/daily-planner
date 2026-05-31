@@ -96,12 +96,14 @@ function toggleDarkMode() {
     applyDarkMode(isDark);
 }
 
-// ---------- مدیریت مودال ----------
+// ---------- مدیریت مودال (با لاگ برای خطایابی) ----------
 function showWelcomeModal() {
     document.getElementById('welcomeModal').style.display = 'flex';
+    console.log('مودال نمایش داده شد');
 }
 function hideWelcomeModal() {
     document.getElementById('welcomeModal').style.display = 'none';
+    console.log('مودال مخفی شد');
 }
 
 // ---------- رندر برنامه‌ریز ----------
@@ -181,7 +183,6 @@ function drawClockCanvas(canvasId, rangeStart, rangeEnd, occupiedHours) {
     const cx = w / 2, cy = h / 2, r = Math.min(cx, cy) - 2;
     ctx.clearRect(0, 0, w, h);
 
-    // دایره زمینه
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, 2 * Math.PI);
     ctx.fillStyle = '#fdf6ec';
@@ -190,7 +191,6 @@ function drawClockCanvas(canvasId, rangeStart, rangeEnd, occupiedHours) {
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    // ترسیم بخش‌های اشغال‌شده
     if (occupiedHours) {
         occupiedHours.forEach(hour => {
             const startAngle = ((hour * 30) - 105) * Math.PI / 180;
@@ -207,7 +207,6 @@ function drawClockCanvas(canvasId, rangeStart, rangeEnd, occupiedHours) {
         });
     }
 
-    // تیک‌های ساعت (۱۲ عدد)
     for (let i = 0; i < 12; i++) {
         const angle = (i - 3) * Math.PI / 6;
         const outer = r - 4;
@@ -224,7 +223,6 @@ function drawClockCanvas(canvasId, rangeStart, rangeEnd, occupiedHours) {
         ctx.stroke();
     }
 
-    // نقطه مرکزی
     ctx.beginPath();
     ctx.arc(cx, cy, 3, 0, 2 * Math.PI);
     ctx.fillStyle = '#3a2517';
@@ -404,9 +402,7 @@ let notificationsEnabled = false;
 const notifiedToday = new Set();
 
 function requestNotificationPermission() {
-    if (!('Notification' in window)) {
-        return;
-    }
+    if (!('Notification' in window)) return;
     if (Notification.permission === 'granted') {
         notificationsEnabled = true;
     } else if (Notification.permission === 'default') {
@@ -428,11 +424,9 @@ function resetNotificationsIfNewDay() {
 function checkScheduleNotifications() {
     if (!notificationsEnabled) return;
     resetNotificationsIfNewDay();
-
     const now = new Date();
     const currentHour = now.getHours();
     const currentMinute = now.getMinutes();
-
     schedules.forEach((sch, index) => {
         if (sch.startH === currentHour && sch.startM === currentMinute) {
             const key = `schedule-${index}`;
@@ -455,13 +449,17 @@ function checkScheduleNotifications() {
 // ---------- رویدادها ----------
 function setupEvents() {
     document.getElementById('darkModeToggle').addEventListener('click', toggleDarkMode);
+
+    // مودال خوش‌آمدگویی - با لاگ برای دیباگ
     document.getElementById('saveNameBtn').addEventListener('click', () => {
+        console.log('دکمه زده شد');
         const nameInput = document.getElementById('nameInput');
         const name = nameInput.value.trim();
         const errorEl = document.getElementById('nameError');
         if (!name) {
             errorEl.textContent = 'لطفاً یک اسم وارد کن 🌱';
             nameInput.focus();
+            console.log('اسم خالی بود');
             return;
         }
         errorEl.textContent = '';
@@ -471,6 +469,7 @@ function setupEvents() {
         updateUIWithName();
         updateCalendarAndPoem();
         renderClocks();
+        console.log('اسم ذخیره شد:', name);
     });
 
     document.getElementById('nameInput').addEventListener('keypress', e => {
@@ -535,10 +534,7 @@ function setupEvents() {
     });
 
     document.querySelectorAll('.island-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const page = btn.dataset.page;
-            switchPage(page);
-        });
+        btn.addEventListener('click', () => switchPage(btn.dataset.page));
     });
 
     document.getElementById('stopwatchStartBtn').addEventListener('click', startStopwatch);
