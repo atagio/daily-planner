@@ -157,13 +157,48 @@ function renderSchedules() {
     });
 }
 
-function drawClockCanvas(canvasId, rangeStart, rangeEnd) {
+// ---------- ساعت‌های نموداری با نمایش اشغال ----------
+function getOccupiedHours() {
+    const occupiedAM = new Set();
+    const occupiedPM = new Set();
+    schedules.forEach(sch => {
+        let h = sch.startH;
+        // اگر دقیقه پایان صفر نباشد، آن ساعت کامل اشغال است
+        const endH = (sch.endM === 0) ? sch.endH : sch.endH + 1;
+        while (h < endH) {
+            if (h < 12) occupiedAM.add(h);
+            else if (h < 24) occupiedPM.add(h - 12); // نگاشت به 0-11
+            h++;
+        }
+    });
+    return { occupiedAM, occupiedPM };
+}
+
+function drawClockCanvas(canvasId, rangeStart, rangeEnd, occupiedHours) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     const w = canvas.width, h = canvas.height;
     const cx = w / 2, cy = h / 2, r = Math.min(cx, cy) - 2;
     ctx.clearRect(0, 0, w, h);
+
+    // ترسیم بخش‌های اشغال‌شده
+    if (occupiedHours) {
+        occupiedHours.forEach(hour => {
+            // هر ساعت 30 درجه است. شروع از بالای ساعت (0 = 12)
+            // تنظیم: ساعت 0 (12) در بالای دایره، بنابراین زاویه = (hour * 30) - 90 (درجه) 
+            // می‌خواهیم بخش کوچکی به عرض 30 درجه اشغال شود
+            const startAngle = ((hour * 30) - 105) * Math.PI / 180; // کمی قبل از خط ساعت
+            const endAngle = ((hour * 30) - 75) * Math.PI / 180;   // کمی بعد
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.arc(cx, cy, r - 2, startAngle, endAngle);
+            ctx.closePath();
+            ctx.fillStyle = 'rgba(192, 133, 82, 0.2)';
+            ctx.fill();
+        });
+    }
+
     const now = new Date();
     const h24 = now.getHours();
     const minutes = now.getMinutes();
@@ -180,6 +215,7 @@ function drawClockCanvas(canvasId, rangeStart, rangeEnd) {
     ctx.arc(cx, cy, r, 0, 2 * Math.PI);
     ctx.strokeStyle = '#8b5e3c';
     ctx.stroke();
+
     for (let i = 0; i < 12; i++) {
         const angle = (i - 3) * Math.PI / 6;
         const outer = r - 5;
@@ -195,29 +231,34 @@ function drawClockCanvas(canvasId, rangeStart, rangeEnd) {
         ctx.lineWidth = 2;
         ctx.stroke();
     }
+
     const totalMinutes = minutes + seconds / 60;
     let hourAngle = (h24 % 12 + totalMinutes / 60) * 30;
     hourAngle = (hourAngle - 90) * Math.PI / 180;
     const minAngle = (totalMinutes * 6 - 90) * Math.PI / 180;
     const secAngle = (seconds * 6 - 90) * Math.PI / 180;
+
     ctx.beginPath();
     ctx.moveTo(cx, cy);
     ctx.lineTo(cx + r * 0.5 * Math.cos(hourAngle), cy + r * 0.5 * Math.sin(hourAngle));
     ctx.strokeStyle = '#3a2517';
     ctx.lineWidth = 4;
     ctx.stroke();
+
     ctx.beginPath();
     ctx.moveTo(cx, cy);
     ctx.lineTo(cx + r * 0.7 * Math.cos(minAngle), cy + r * 0.7 * Math.sin(minAngle));
     ctx.strokeStyle = '#6b4c3b';
     ctx.lineWidth = 3;
     ctx.stroke();
+
     ctx.beginPath();
     ctx.moveTo(cx, cy);
     ctx.lineTo(cx + r * 0.8 * Math.cos(secAngle), cy + r * 0.8 * Math.sin(secAngle));
     ctx.strokeStyle = '#c96b4f';
     ctx.lineWidth = 1.5;
     ctx.stroke();
+
     ctx.beginPath();
     ctx.arc(cx, cy, 3, 0, 2 * Math.PI);
     ctx.fillStyle = '#3a2517';
@@ -225,8 +266,9 @@ function drawClockCanvas(canvasId, rangeStart, rangeEnd) {
 }
 
 function renderClocks() {
-    drawClockCanvas('clockAMCanvas', 0, 12);
-    drawClockCanvas('clockPMCanvas', 12, 24);
+    const { occupiedAM, occupiedPM } = getOccupiedHours();
+    drawClockCanvas('clockAMCanvas', 0, 12, occupiedAM);
+    drawClockCanvas('clockPMCanvas', 12, 24, occupiedPM);
 }
 
 // ---------- کرونومتر ----------
@@ -513,6 +555,7 @@ function setupEvents() {
         startInput.value = '';
         endInput.value = '';
         renderSchedules();
+        renderClocks(); // به‌روزرسانی ساعت‌ها برای نمایش اشغال جدید
     });
 
     document.getElementById('scheduleList').addEventListener('click', e => {
@@ -521,6 +564,7 @@ function setupEvents() {
             schedules.splice(index, 1);
             saveSchedules();
             renderSchedules();
+            renderClocks(); // به‌روزرسانی ساعت‌ها پس از حذف
         }
     });
 
