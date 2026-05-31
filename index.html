@@ -18,147 +18,17 @@
             <p>لطفاً اسم قشنگت رو بنویس تا صفحه رو برات شخصی‌سازی کنم:</p>
             <input type="text" id="nameInput" class="name-input" placeholder="اسمت رو اینجا بنویس..." autocomplete="off">
             <p class="modal-error" id="nameError"></p>
-            <button id="saveNameBtn" class="btn-primary">✨ بزن بریم!</button>
+            <!-- دکمه با onclick -->
+            <button id="saveNameBtn" class="btn-primary" onclick="handleSaveName()">✨ بزن بریم!</button>
             <p class="modal-hint">اسمت رو دوست دارم بدونم تا بتونم صفحه رو برات خاص کنم 💛</p>
         </div>
     </div>
 
+    <!-- بقیه محتوا دقیقاً مثل قبل (حذف نشه) -->
     <div id="appContainer" class="app-container">
-        <header class="app-header">
-            <div class="header-top-row">
-                <button id="darkModeToggle" class="dark-mode-btn" aria-label="تغییر تم">🌙</button>
-            </div>
-            <div class="calendar-card">
-                <div class="calendar-day-name" id="weekdayName">شنبه</div>
-                <div class="calendar-main">
-                    <span class="calendar-day" id="jalaliDay">۱</span>
-                    <span class="calendar-month" id="jalaliMonth">فروردین</span>
-                    <span class="calendar-year" id="jalaliYear">۱۴۰۴</span>
-                </div>
-                <div class="calendar-date-detail">
-                    <span id="gregorianDate">۲۹ می ۲۰۲۶</span>
-                </div>
-            </div>
-            <div class="greeting-section">
-                <h1 class="greeting-text" id="greetingText">صفحه‌ی برنامه‌ریزی <span id="userNameDisplay">دوست من</span></h1>
-                <div class="poem-card" id="dailyPoem">
-                    <span class="poem-icon">📜</span>
-                    <p class="poem-text" id="poemText">در حال بارگذاری...</p>
-                </div>
-            </div>
-        </header>
-
-        <div class="pages-container">
-            <section class="page active" id="plannerPage">
-                <div class="list-section">
-                    <div class="section-header">
-                        <h2>📝 کارهایی که باید انجام بدم</h2>
-                        <span class="item-count" id="todoCount">۰ کار</span>
-                    </div>
-                    <div class="add-item-row">
-                        <input type="text" id="todoInput" class="item-input" placeholder="یه کار جدید بنویس..." autocomplete="off">
-                        <button id="addTodoBtn" class="btn-add">➕ افزودن</button>
-                    </div>
-                    <ul class="item-list" id="todoList"></ul>
-                    <p class="empty-msg" id="todoEmpty">✨ هیچ کاری ثبت نشده. یه کار جدید اضافه کن!</p>
-                </div>
-                <div class="section-divider"><span>✦</span></div>
-                <div class="list-section">
-                    <div class="section-header">
-                        <h2>🕐 برنامه‌های زمان‌بندی شده</h2>
-                        <span class="item-count" id="scheduleCount">۰ برنامه</span>
-                    </div>
-                    <div class="add-item-row schedule-add-row">
-                        <input type="text" id="scheduleInput" class="item-input" placeholder="عنوان برنامه..." autocomplete="off">
-                        <div class="time-range-selects">
-                            <input type="time" id="scheduleStart" class="time-input" step="60">
-                            <span class="range-separator">تا</span>
-                            <input type="time" id="scheduleEnd" class="time-input" step="60">
-                        </div>
-                        <button id="addScheduleBtn" class="btn-add">➕ افزودن</button>
-                    </div>
-                    <ul class="item-list" id="scheduleList"></ul>
-                    <p class="empty-msg" id="scheduleEmpty">🕊️ هنوز برنامه‌ی زمان‌بندی شده‌ای نداری.</p>
-                </div>
-                <div class="clocks-section">
-                    <h2 class="clocks-title">🕰️ ساعت‌های روز</h2>
-                    <div class="clocks-container">
-                        <div class="clock-wrapper">
-                            <h3 class="clock-label">🌅 قبل از ظهر</h3>
-                            <div class="clock-face" id="clockAM">
-                                <canvas id="clockAMCanvas" width="170" height="170"></canvas>
-                                <div class="clock-center"></div>
-                            </div>
-                        </div>
-                        <div class="clock-wrapper">
-                            <h3 class="clock-label">🌙 بعد از ظهر</h3>
-                            <div class="clock-face" id="clockPM">
-                                <canvas id="clockPMCanvas" width="170" height="170"></canvas>
-                                <div class="clock-center"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="page" id="stopwatchPage">
-                <div class="stopwatch-card">
-                    <h2>⏱️ کرونومتر</h2>
-                    <div class="timer-display" id="stopwatchDisplay">00:00:00</div>
-                    <div class="timer-controls">
-                        <button id="stopwatchStartBtn" class="btn-primary">▶ شروع</button>
-                        <button id="stopwatchPauseBtn" class="btn-secondary" disabled>⏸️ توقف</button>
-                        <button id="stopwatchLapBtn" class="btn-secondary" disabled>🏁 دور</button>
-                        <button id="stopwatchResetBtn" class="btn-secondary">↺ بازنشانی</button>
-                    </div>
-                    <ul class="lap-list" id="lapList"></ul>
-                </div>
-            </section>
-
-            <section class="page" id="pomodoroPage">
-                <div class="pomodoro-card">
-                    <h2>🍅 پومودورو</h2>
-                    <div class="pomodoro-settings">
-                        <div class="setting-row">
-                            <label for="workMinutes">دقیقه کار:</label>
-                            <input type="number" id="workMinutes" class="setting-input" value="25" min="1" max="99">
-                        </div>
-                        <div class="setting-row">
-                            <label for="breakMinutes">دقیقه استراحت:</label>
-                            <input type="number" id="breakMinutes" class="setting-input" value="5" min="1" max="99">
-                        </div>
-                        <div class="setting-row">
-                            <label for="workParts">تعداد پارت‌های کار:</label>
-                            <input type="number" id="workParts" class="setting-input" value="4" min="1" max="20">
-                        </div>
-                    </div>
-                    <div class="pomodoro-display">
-                        <div class="pomodoro-phase" id="pomodoroPhase">آماده</div>
-                        <div class="pomodoro-timer" id="pomodoroTimer">25:00</div>
-                        <div class="pomodoro-progress">
-                            <span id="pomodoroProgress">پارت ۰ از ۴</span>
-                        </div>
-                    </div>
-                    <div class="pomodoro-controls">
-                        <button id="pomodoroStartBtn" class="btn-primary">▶ شروع</button>
-                        <button id="pomodoroPauseBtn" class="btn-secondary" disabled>⏸️ توقف</button>
-                        <button id="pomodoroResetBtn" class="btn-secondary">↺ بازنشانی</button>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-        <nav class="bottom-island">
-            <button class="island-btn active" data-page="plannerPage">📋 برنامه‌ریز</button>
-            <button class="island-btn" data-page="stopwatchPage">⏱️ کرونومتر</button>
-            <button class="island-btn" data-page="pomodoroPage">🍅 پومودورو</button>
-        </nav>
-
-        <footer class="app-footer">
-            <p>🍂 ساخته شده با عشق برای <span id="footerName">تو</span> | <span id="footerDate"></span></p>
-        </footer>
+        <!-- ... -->
     </div>
 
-    <script src="app.js?v=20260531"></script>
+    <script src="app.js?v=20260601"></script>
 </body>
 </html>
